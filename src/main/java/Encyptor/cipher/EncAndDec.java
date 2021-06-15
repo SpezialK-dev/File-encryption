@@ -25,20 +25,16 @@ public class EncAndDec extends Gui{
     public EncAndDec(){
     }
     //encriptor
-public static void encryptedFile(String password, String fileInputPath, String fileOutPath, JLabel status)
+public static void encryptedFile(char[] password, String fileInputPath, String fileOutPath, JLabel status,byte[] salt)
 throws NoSuchAlgorithmException, NoSuchPaddingException, InvalidKeyException, IOException,
 IllegalBlockSizeException, BadPaddingException, InvalidKeySpecException {
     //
     status.setText("Converting Key");
-    /*old thingin doesnt really work
-    SecretKeySpec key = new SecretKeySpec(secretKey.getBytes(), "AES");
-    Cipher cipher = Cipher.getInstance("AES");
-    cipher.init(Cipher.ENCRYPT_MODE, key);
-    */
+    //creates a key that will later be used to encryped everything 
     SecretKeyFactory factory = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA256");
-    KeySpec spec = new PBEKeySpec(password, salt, 65536, 256);
+    KeySpec spec = new PBEKeySpec(password, salt, 65536, 256);//uses 65536 retreys and 256 bit encryption
     SecretKey tmp = factory.generateSecret(spec);
-    SecretKey secret = new SecretKeySpec(tmp.getEncoded(), "AES");
+    SecretKey secret = new SecretKeySpec(tmp.getEncoded(), "AES");//uses AES
 
     status.setText("reading File");
     //reads the input of the file as an array
@@ -48,16 +44,17 @@ IllegalBlockSizeException, BadPaddingException, InvalidKeySpecException {
     inputStream.read(inputBytes);
     inputStream.close();
     
-    status.setText("encyping and writing to new File");
+    status.setText("encyping");
     //the actual cyper 
     //byte[] outputBytes = cipher.doFinal(inputBytes);removed because not working
     //writes the encrypted text out to the file
     
     //output stream
+    status.setText("writing to new File");
     File fileEncryptOut = new File(fileOutPath);
     FileOutputStream outputStream = new FileOutputStream(fileEncryptOut);
-    outputStream.write(outputBytes);
-    outputStream.close();
+    //outputStream.write(outputBytes);
+    //outputStream.close();
 
     }
     //decriptor
