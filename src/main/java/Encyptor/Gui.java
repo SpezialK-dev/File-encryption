@@ -11,6 +11,7 @@ import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 import java.security.spec.InvalidKeySpecException;
+import java.security.spec.InvalidParameterSpecException;
 import java.util.Arrays;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -122,7 +123,7 @@ public class Gui extends Main implements ActionListener{
                 System.out.println("Error not being able to find shit  ");
             }else{// there is stuff there and then try that
                 char[] pasw = (keyField.getText()).toCharArray();//converts the thing into a Char array
-                try {//because the shit might fail so there is a try statment
+                try {//because the shit might fabyte[] iv = params.getParameterSpec(IvParameterSpec.class).getIV();il so there is a try statment
                     System.out.println(dir);
                     //tring secretKey, String fileInputPath, String fileOutPath, JLabel status
                     Encyptor.cipher.EncAndDec.encryptedFile(pasw,path, dir,statusL,saltGen());//actually encryptes the thing and creates a new file with this 
@@ -131,20 +132,26 @@ public class Gui extends Main implements ActionListener{
                     Logger.getLogger(Gui.class.getName()).log(Level.SEVERE, null, ex);
                 } catch (InvalidKeySpecException ex) {
                     Logger.getLogger(Gui.class.getName()).log(Level.SEVERE, null, ex);
+                } catch (InvalidParameterSpecException ex) {
+                    Logger.getLogger(Gui.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }
         }if(e.getSource()== showAllINfo){
-            //creates an info pannel
-            JOptionPane.showMessageDialog(frame, 
-                    "All information"
-                        +"\nSalt : "+"currently not here"
-                        +"\nCurrent Password : " + keyField.getText()
-                        +"\n"
-                        +"\n"
-                        +"\n"
-                        +"\n",
-                    "Information",
-                    JOptionPane.PLAIN_MESSAGE);
+            try {//can be removed when instead of a salt gen we have a variable that actually displays the current salt
+                //creates an info pannel
+                JOptionPane.showMessageDialog(frame,
+                        "All information"
+                                +"\nSalt : "+ Arrays.toString(saltGen())
+                                +"\nCurrent Password : " + keyField.getText()
+                                +"\n"
+                                +"\n"
+                                +"\n"
+                                +"\n",
+                        "Information",
+                        JOptionPane.PLAIN_MESSAGE);
+            } catch (NoSuchAlgorithmException ex) {
+                Logger.getLogger(Gui.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }if(e.getSource() == help){
             JOptionPane.showMessageDialog(frame, 
                     "this is an help menue"
