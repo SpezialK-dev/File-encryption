@@ -29,16 +29,21 @@ public class Gui extends Main implements ActionListener{
     JButton openFile = new JButton("open File");
     JButton help = new JButton("Help");
     JButton showAllINfo = new JButton("all Info");
+    JButton loadingFforD = new JButton("load config for Dec");
+    JButton clearSalt = new JButton("clear Salt");
     
     // all of the status text like what file got choosen and shit like that
     JLabel statusFL = new JLabel("no file selected");
     JLabel statusL = new JLabel("No file Status");
     JLabel statusFNameL = new JLabel("no file name");
     JLabel txtF = new JLabel("Key: ");
+    JLabel keyL = new JLabel("decription Key: ");
     
     //text fields
-    JTextField keyField = new JTextField("Password",30);//replace "Password with a randomly generated password(using somethign like salt gen or somethign else wich is strong and not really reversable)"
+    JTextField pswField = new JTextField("Password",30);//replace "Password with a randomly generated password(using somethign like salt gen or somethign else wich is strong and not really reversable)"
+    JTextField keyField = new JTextField(260);
     
+    //creates the panel and Frame
     JPanel panel = new JPanel();
     JFrame frame = new JFrame();
     
@@ -47,11 +52,13 @@ public class Gui extends Main implements ActionListener{
     private String path;
     private String Key; //the encyption key
     private String dir = System.getProperty("user.dir");
+    private byte[] curSalt;
     
     public Gui(){
+        this.keyField = new JTextField(260);
         
         //generell frame settings
-        frame.setSize(700, 270);//valous 500,270
+        frame.setSize(700, 400);//valous 500,270
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.add(panel);
         frame.setTitle("Encryptor / decryptor");
@@ -74,16 +81,27 @@ public class Gui extends Main implements ActionListener{
         encriptB.addActionListener(this);
         panel.add(encriptB);
         //info Button
-        showAllINfo.setBounds(400, 170,100,25);
+        showAllINfo.setBounds(40, 130,100,25);
         showAllINfo.addActionListener(this);
         panel.add(showAllINfo);
         //help button
-        help.setBounds(520, 170,100,25);
+        help.setBounds(520, 170,120,25);
         help.addActionListener(this);
         panel.add(help);
+        //load config button
+        loadingFforD.setBounds(160, 130,220,25);
+        loadingFforD.addActionListener(this);
+        panel.add(loadingFforD);
+        //Salt clear Button
+        clearSalt.setBounds(520,130,120,25);
+        clearSalt.addActionListener(this);
+        panel.add(clearSalt);
         
         //adding the text field to enter in the key 
-        keyField.setBounds(55,210,300,25);
+        pswField.setBounds(130,210,300,25);
+        panel.add(pswField);
+        //adding the field for where a user could enter a secret key that then would be used to decript the thingi 
+        keyField.setBounds(130,240,300,25);
         panel.add(keyField);
         
         //adding the text thingis 
@@ -98,8 +116,11 @@ public class Gui extends Main implements ActionListener{
         //adding the text for the key field
         txtF.setBounds(20,210,40,25);
         panel.add(txtF);
+        keyL.setBounds(20,240,120,25);
+        panel.add(keyL);
         
-                
+        
+     
         frame.setVisible(true);
         
     }
@@ -119,61 +140,76 @@ public class Gui extends Main implements ActionListener{
             }
         }if(e.getSource() == encriptB){
             //if stuff is empty give out an Error
-            if(keyField.getText() == ""|| path == ""){//redo this to make a popup 
-                System.out.println("Error not being able to find shit  ");
+            if(pswField.getText() == ""|| path == ""){//redo this to make a popup 
+                JOptionPane.showMessageDialog(frame,"Something went wrong during runtime\nplease check the Application logs","Error", JOptionPane.PLAIN_MESSAGE);
             }else{// there is stuff there and then try that
-                char[] pasw = (keyField.getText()).toCharArray();//converts the thing into a Char array
-                try {//because the shit might fabyte[] iv = params.getParameterSpec(IvParameterSpec.class).getIV();il so there is a try statment
-                    System.out.println(dir);
-                    //tring secretKey, String fileInputPath, String fileOutPath, JLabel status
-                    Encyptor.cipher.EncAndDec.encryptedFile(pasw,path, dir,statusL,saltGen());//actually encryptes the thing and creates a new file with this 
+                char[] pasw = (pswField.getText()).toCharArray();//converts the thing into a Char array
+                try {//because the shit might fabyte[] iv = params.getParameterSpec(IvParameterSpec.class).getIV();il so there is a try statmen
+                    //tring secretKey, String fileInputPath, String fileOutPath, JLabel status //retunr the salt that was used
+                    curSalt = Encyptor.cipher.EncAndDec.encryptedFile(pasw,path, dir,statusL,saltGen());//actually encryptes the thing and creates a new file with this 
                     // catch all of the exeptions
-                } catch (NoSuchAlgorithmException | NoSuchPaddingException | InvalidKeyException | IOException | IllegalBlockSizeException | BadPaddingException ex) {
+                } catch (NoSuchAlgorithmException | NoSuchPaddingException | InvalidKeyException | IOException | IllegalBlockSizeException | BadPaddingException | InvalidKeySpecException | InvalidParameterSpecException ex) {
                     Logger.getLogger(Gui.class.getName()).log(Level.SEVERE, null, ex);
-                } catch (InvalidKeySpecException ex) {
-                    Logger.getLogger(Gui.class.getName()).log(Level.SEVERE, null, ex);
-                } catch (InvalidParameterSpecException ex) {
-                    Logger.getLogger(Gui.class.getName()).log(Level.SEVERE, null, ex);
+                    JOptionPane.showMessageDialog(frame,"Something went wrong during runtime\nplease check the Application logs","Error", JOptionPane.PLAIN_MESSAGE);
                 }
             }
-        }if(e.getSource()== showAllINfo){
-            try {//can be removed when instead of a salt gen we have a variable that actually displays the current salt
-                //creates an info pannel
-                JOptionPane.showMessageDialog(frame,
-                        "All information"
-                                +"\nSalt : "+ Arrays.toString(saltGen())
-                                +"\nCurrent Password : " + keyField.getText()
-                                +"\n"
-                                +"\n"
-                                +"\n"
-                                +"\n",
-                        "Information",
-                        JOptionPane.PLAIN_MESSAGE);
-            } catch (NoSuchAlgorithmException ex) {
-                Logger.getLogger(Gui.class.getName()).log(Level.SEVERE, null, ex);
+        }if(e.getSource()== showAllINfo){ 
+            JOptionPane.showMessageDialog(frame,
+                "All information"
+                    +"\nSalt : "+ Arrays.toString(curSalt)
+                    +"\nCurrent Password : " + pswField.getText()
+                    +"\n"
+                    +"\n"
+                    +"\n"
+                    +"\n",
+                    "Information",
+            JOptionPane.PLAIN_MESSAGE);
             }
-        }if(e.getSource() == help){
+        if(e.getSource() == help){
             JOptionPane.showMessageDialog(frame, 
                     "this is an help menue"
-                        +"\n this shows you how to use this program"
+                        +"\nthis shows you how to use this program"
                         +"\n"
-                        +"\n"
-                        +"\n"
-                        +"\n"
-                        +"\n"
-                        +"\n"
-                        +"\n"
+                        +"\nthe decription Key could be enterd into the program if knowen "
+                        +"\nthe password will be used with a random salt to generate the key for encription"
+                        +"\nall info shows all of the information about the current salt and password"
+                        +"\nload file should be used to load a file to de- or encript"
+                        +"\nclear Salt overwrites the variable for the salt"
+                        +"\nthe password and salt can be reused to decript something imidialy"
+                        +"\nso the salt stay in cach as long as the app is open "
                         +"\n"
                         +"\n",
                     "Help",
                     JOptionPane.PLAIN_MESSAGE);
+        }if(e.getSource()== loadingFforD){
+            JFileChooser configL = new JFileChooser();
+            int returnVal2 = configL.showOpenDialog(panel);
+            if(returnVal2 == JFileChooser.APPROVE_OPTION){
+                System.out.println("feature currently unavailable  ");
+            } 
+        }if(e.getSource() == decripB){
+
+        }if(e.getSource() == clearSalt){
+            curSalt = null;
         }
     }
     //generates a random salt using the system nativ RNG (this can lead to different generations depending on system and waht is used)
     private byte[] saltGen() throws NoSuchAlgorithmException{
         SecureRandom sr = SecureRandom.getInstance("NativePRNG");//slowe and uses the system nativ defined RNG generator use "SHA1PRNG" if you want smth more consitend or faster
-	byte[] bytes = new byte[64];
+	byte[] bytes = new byte[16];
 	sr.nextBytes(bytes);
         return  bytes;
     }
+    public String creatingOutputString(){
+        
+    }
+    
+    
+    
+    /*
+    add to gui
+    - a way to see and add a key to decript it 
+    - a way to show the key 
+    - a button remove every pice from ram and stuff to wipe your pc from the genreation
+    */
 }

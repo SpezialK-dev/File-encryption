@@ -28,17 +28,17 @@ public class EncAndDec extends Gui{
     public EncAndDec(){
     }
     //encriptor
-public static void encryptedFile(char[] password, String fileInputPath, String fileOutPath, JLabel status,byte[] salt)
+public static byte[] encryptedFile(char[] password, String fileInputPath, String fileOutPath, JLabel status,byte[] salt)
 throws NoSuchAlgorithmException, NoSuchPaddingException, InvalidKeyException, IOException,
 IllegalBlockSizeException, BadPaddingException, InvalidKeySpecException, InvalidParameterSpecException {
     //
     status.setText("Converting Key");
     //creates a key that will later be used to encryped everything 
     SecretKeyFactory factory = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA256");
-    KeySpec spec = new PBEKeySpec(password, salt, 65536, 256);//uses 65536 retreys and 256 bit encryption
+    KeySpec spec = new PBEKeySpec(password, salt, 65536, 256);//uses 65536 rounds and 256 bit encryption
     SecretKey tmp = factory.generateSecret(spec);
     SecretKey secret = new SecretKeySpec(tmp.getEncoded(), "AES");//uses AES
-
+    
     status.setText("reading File");
     //reads the input of the file as an array
     File fileInput = new File(fileInputPath);
@@ -62,9 +62,10 @@ IllegalBlockSizeException, BadPaddingException, InvalidKeySpecException, Invalid
     outputStream.write(outputBytes);
     outputStream.close();
     status.setText("finished");
-
+    return salt;
     }
     //decriptor
+/*
 public static void deEcripedFiles(String secretKey, String fileInputPath, String fileOutPath, JLabel status) 
         throws NoSuchAlgorithmException, NoSuchPaddingException, InvalidKeyException, FileNotFoundException, IOException, IllegalBlockSizeException, BadPaddingException{
         
@@ -84,10 +85,12 @@ public static void deEcripedFiles(String secretKey, String fileInputPath, String
     inputStream.close();
     
     status.setText("encyping and writing to new File");
-    //the actual cyper 
-    byte[] outputBytes = cipher.doFinal(inputBytes);
-    //writes the encrypted text out to the file
+
+    Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5Padding");
+    cipher.init(Cipher.DECRYPT_MODE, secret, new IvParameterSpec(iv));
+    String plaintext = new String(cipher.doFinal(ciphertext), StandardCharsets.UTF_8);
     
+
     //output stream
     File fileDeEncryptOut = new File(fileOutPath);
     FileOutputStream outputStream = new FileOutputStream(fileDeEncryptOut);
@@ -95,5 +98,5 @@ public static void deEcripedFiles(String secretKey, String fileInputPath, String
     outputStream.close();
 
         
-    } 
+    }*/
 }
