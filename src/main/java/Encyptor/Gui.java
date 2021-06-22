@@ -6,7 +6,9 @@ import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
@@ -33,15 +35,23 @@ public class Gui extends Main implements ActionListener{
     JButton clearSalt = new JButton("clear Salt");
     
     // all of the status text like what file got choosen and shit like that
+    //encription labels
+    JLabel titelE = new JLabel("encription Files");
     JLabel statusFL = new JLabel("no file selected");
     JLabel statusL = new JLabel("No file Status");
     JLabel statusFNameL = new JLabel("no file name");
     JLabel txtF = new JLabel("Key: ");
+    //decription lables
     JLabel keyL = new JLabel("decription Key: ");
+    JLabel decripFile  = new JLabel("no file selected");//file path
+    JLabel decripFileName = new JLabel("no file name");//fiole name
+    JLabel saltL1 = new JLabel("decription Salt: ");
+    JLabel titelD = new JLabel("decription Files:");
     
     //text fields
     JTextField pswField = new JTextField("Password",30);//replace "Password with a randomly generated password(using somethign like salt gen or somethign else wich is strong and not really reversable)"
-    JTextField keyField = new JTextField(260);
+    JTextField keyField = new JTextField(260);//the password field 
+    JTextField saltField = new JTextField();
     
     //creates the panel and Frame
     JPanel panel = new JPanel();
@@ -58,7 +68,7 @@ public class Gui extends Main implements ActionListener{
         this.keyField = new JTextField(260);
         
         //generell frame settings
-        frame.setSize(700, 400);//valous 500,270
+        frame.setSize(700, 420);//valous 500,270
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.add(panel);
         frame.setTitle("Encryptor / decryptor");
@@ -103,24 +113,45 @@ public class Gui extends Main implements ActionListener{
         //adding the field for where a user could enter a secret key that then would be used to decript the thingi 
         keyField.setBounds(130,240,300,25);
         panel.add(keyField);
+        //keyfield for the salt will need more stuff backend but this is just a non working intehration so that there is something there and not just somethign empty
+        saltField.setBounds(130,270,300,25);
+        panel.add(saltField);
+        
         
         //adding the text thingis 
         //just what file you have selected
-        statusFL.setBounds(20,20,600,25);
+        statusFL.setBounds(20,50,600,25);
         panel.add(statusFL);
-        statusFNameL.setBounds(20,40,380,25);
+        statusFNameL.setBounds(20,70,380,25);
         panel.add(statusFNameL);
         //the status of if encryition is finished and shit 
-        statusL.setBounds(20,60,200,25);
+        statusL.setBounds(20,90,200,25);
         panel.add(statusL);
         //adding the text for the key field
         txtF.setBounds(20,210,40,25);
         panel.add(txtF);
+        // add the decription text field
         keyL.setBounds(20,240,120,25);
         panel.add(keyL);
-        
-        
+        //the label for th decription Salt 
+        saltL1.setBounds(20,270,120,25);
+        panel.add(saltL1);
+        //adding all the titels 
+        //encription
+        titelE.setBounds(20,20,600,25);
+        panel.add(titelE);
+        //decription Titel
+        titelD.setBounds(20, 300,300,25);
+        panel.add(titelD);
+        //adding everything for decription 
+        //file path 
+        decripFile.setBounds(20,330,600,25);
+        panel.add(decripFile);
+        //file name 
+        decripFileName.setBounds(20,360,600,25);
+        panel.add(decripFileName);
      
+      
         frame.setVisible(true);
         
     }
@@ -170,6 +201,7 @@ public class Gui extends Main implements ActionListener{
                     "this is an help menue"
                         +"\nthis shows you how to use this program"
                         +"\n"
+                        +"\nthe Key Field should be used to enter the password that the user wants to use to encript the file"
                         +"\nthe decription Key could be enterd into the program if knowen "
                         +"\nthe password will be used with a random salt to generate the key for encription"
                         +"\nall info shows all of the information about the current salt and password"
@@ -188,7 +220,7 @@ public class Gui extends Main implements ActionListener{
                 System.out.println("feature currently unavailable  ");
             } 
         }if(e.getSource() == decripB){
-
+            creatingOutputString();
         }if(e.getSource() == clearSalt){
             curSalt = null;
         }
@@ -201,11 +233,28 @@ public class Gui extends Main implements ActionListener{
         return  bytes;
     }
     public String creatingOutputString(){
-        
+        if(curSalt == null|pswField.getText() == null){
+                    JOptionPane.showMessageDialog(frame, 
+                    "There was a fatal flaw",
+                    "Erorre",
+                    JOptionPane.PLAIN_MESSAGE);
+        }else{
+            String outputString = pswField.getText()+ "|" + Arrays.toString(curSalt) ;
+            System.out.println(outputString);
+            return outputString;
+        }
+        return "there was a mistake";
     }
-    
-    
-    
+/*
+    public String convertbyteArrytoString(byte[] input){
+        int n = 0;
+        String output = "";
+        while(n < input.length){
+            output = (input[n]) + ",";
+            n++;
+        }
+        return output;
+    }*/
     /*
     add to gui
     - a way to see and add a key to decript it 
