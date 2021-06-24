@@ -2,12 +2,16 @@
 package Encyptor.cipher;
 
 import Encyptor.Gui;
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.FileWriter;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.security.AlgorithmParameters;
+import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.security.spec.InvalidKeySpecException;
@@ -28,7 +32,25 @@ public class EncAndDec extends Gui{
     public EncAndDec(){
     }
     //encriptor
-public static byte[] encryptedFile(char[] password, String fileInputPath, String fileOutPath, JLabel status,byte[] salt)
+
+    /**
+     *
+     * @param password
+     * @param fileInputPath
+     * @param fileOutPath
+     * @param status
+     * @param salt
+     * @return 
+     * @throws NoSuchAlgorithmException
+     * @throws NoSuchPaddingException
+     * @throws InvalidKeyException
+     * @throws IOException
+     * @throws IllegalBlockSizeException
+     * @throws BadPaddingException
+     * @throws InvalidKeySpecException
+     * @throws InvalidParameterSpecException
+     */
+public static Ouput encryptedFile(char[] password, String fileInputPath, String fileOutPath, JLabel status,byte[] salt)
 throws NoSuchAlgorithmException, NoSuchPaddingException, InvalidKeyException, IOException,
 IllegalBlockSizeException, BadPaddingException, InvalidKeySpecException, InvalidParameterSpecException {
     //
@@ -62,18 +84,20 @@ IllegalBlockSizeException, BadPaddingException, InvalidKeySpecException, Invalid
     outputStream.write(outputBytes);
     outputStream.close();
     status.setText("finished");
-    return salt;
+    
+    Ouput out = new Ouput();
+    return out;
     }
     //decriptor
-/*
-public static void deEcripedFiles(String secretKey, String fileInputPath, String fileOutPath, JLabel status) 
-        throws NoSuchAlgorithmException, NoSuchPaddingException, InvalidKeyException, FileNotFoundException, IOException, IllegalBlockSizeException, BadPaddingException{
+
+public static void deEcripedFiles(char[] password, String fileInputPath, String fileOutPath, JLabel status,byte[] salt,byte[] iv) 
+        throws NoSuchAlgorithmException, NoSuchPaddingException, InvalidKeyException, FileNotFoundException, IOException, IllegalBlockSizeException, BadPaddingException, InvalidKeySpecException, InvalidAlgorithmParameterException{
         
    //Converting a key
-    status.setText("Converting Key");
-    SecretKeySpec key = new SecretKeySpec(secretKey.getBytes(), "AES");
-    Cipher cipher = Cipher.getInstance("AES");
-    cipher.init(Cipher.DECRYPT_MODE, key);
+    SecretKeyFactory factory = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA256");
+    KeySpec spec = new PBEKeySpec(password, salt, 65536, 256);//uses 65536 rounds and 256 bit encryption
+    SecretKey tmp = factory.generateSecret(spec);
+    SecretKey secret = new SecretKeySpec(tmp.getEncoded(), "AES");//uses AES
     
     
     status.setText("reading File");
@@ -88,15 +112,15 @@ public static void deEcripedFiles(String secretKey, String fileInputPath, String
 
     Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5Padding");
     cipher.init(Cipher.DECRYPT_MODE, secret, new IvParameterSpec(iv));
-    String plaintext = new String(cipher.doFinal(ciphertext), StandardCharsets.UTF_8);
+    String plaintext = new String(cipher.doFinal(inputBytes), StandardCharsets.UTF_8);
     
-
+    
     //output stream
-    File fileDeEncryptOut = new File(fileOutPath);
-    FileOutputStream outputStream = new FileOutputStream(fileDeEncryptOut);
-    outputStream.write(outputBytes);
-    outputStream.close();
+    File outFile = new File(fileOutPath);
+    BufferedWriter outwriter = new BufferedWriter(new FileWriter(outFile));
+    outwriter.write(plaintext);
+    outwriter.close();
 
         
-    }*/
+    }
 }
