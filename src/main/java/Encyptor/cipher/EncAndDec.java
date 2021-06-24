@@ -33,23 +33,6 @@ public class EncAndDec extends Gui{
     }
     //encriptor
 
-    /**
-     *
-     * @param password
-     * @param fileInputPath
-     * @param fileOutPath
-     * @param status
-     * @param salt
-     * @return 
-     * @throws NoSuchAlgorithmException
-     * @throws NoSuchPaddingException
-     * @throws InvalidKeyException
-     * @throws IOException
-     * @throws IllegalBlockSizeException
-     * @throws BadPaddingException
-     * @throws InvalidKeySpecException
-     * @throws InvalidParameterSpecException
-     */
 public static Output encryptedFile(char[] password, String fileInputPath, String fileOutPath, JLabel status,byte[] salt)
 throws NoSuchAlgorithmException, NoSuchPaddingException, InvalidKeyException, IOException,
 IllegalBlockSizeException, BadPaddingException, InvalidKeySpecException, InvalidParameterSpecException {
@@ -108,18 +91,19 @@ public static void deEcripedFiles(char[] password, String fileInputPath, String 
     inputStream.read(inputBytes);
     inputStream.close();
     
-    status.setText("encyping and writing to new File");
+    status.setText("decripting");
 
     Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5Padding");
     cipher.init(Cipher.DECRYPT_MODE, secret, new IvParameterSpec(iv));
     String plaintext = new String(cipher.doFinal(inputBytes), StandardCharsets.UTF_8);
     
-    
+    status.setText("writing to new File");
     //output stream
     File outFile = new File(fileOutPath);
     BufferedWriter outwriter = new BufferedWriter(new FileWriter(outFile));
     outwriter.write(plaintext);
     outwriter.close();
+    status.setText("finished");
 
         
     }
