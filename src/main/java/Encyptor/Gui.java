@@ -8,8 +8,10 @@ import Encyptor.cipher.Output;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.security.InvalidAlgorithmParameterException;
@@ -19,6 +21,7 @@ import java.security.SecureRandom;
 import java.security.spec.InvalidKeySpecException;
 import java.security.spec.InvalidParameterSpecException;
 import java.util.Arrays;
+import java.util.Random;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.crypto.BadPaddingException;
@@ -37,6 +40,7 @@ public class Gui extends Main implements ActionListener{
     JButton showAllINfo = new JButton("all Info");
     JButton loadingFforD = new JButton("load config for Dec");
     JButton clearInfo = new JButton("clear Info");
+    JButton saveConfig = new JButton("save Config");
     
     // all of the status text like what file got choosen and shit like that
     //encription labels
@@ -111,7 +115,10 @@ public class Gui extends Main implements ActionListener{
         clearInfo.setBounds(520,130,120,25);
         clearInfo.addActionListener(this);
         panel.add(clearInfo);
-        
+        //saves the config to your harddrive so you can send it to someone 
+        saveConfig.setBounds(520,210,120,25);
+        saveConfig.addActionListener(this);
+        panel.add(saveConfig);
         //adding the text field to enter in the key 
         pswField.setBounds(130,210,300,25);
         panel.add(pswField);
@@ -150,6 +157,7 @@ public class Gui extends Main implements ActionListener{
         //file name 
         decripFileName.setBounds(20,360,600,25);
         panel.add(decripFileName);
+        //the titel for the decription
      
       
         frame.setVisible(true);
@@ -177,7 +185,7 @@ public class Gui extends Main implements ActionListener{
                 char[] pasw = (pswField.getText()).toCharArray();//converts the thing into a Char array
                 String tempdir = dir + ".enc";
                 try {//because the shit might fabyte[] iv = params.getParameterSpec(IvParameterSpec.class).getIV();il so there is a try statmen
-                    //tring secretKey, String fileInputPath, String fileOutPath, JLabel status //retunr the salt that was used
+                     //returns a new type that has the salt and IV stored
                     out = encryptedFile(pasw,path, tempdir,statusL,saltGen());//actually encryptes the thing and creates a new file with this 
                     //converting the output into theire own arrays and shit 
                     curSalt = out.retSalt();
@@ -243,6 +251,13 @@ public class Gui extends Main implements ActionListener{
         }if(e.getSource() == clearInfo){
             curSalt = null;
             curIV = null;
+        }if(e.getSource() == saveConfig){
+            String outSt = creatingOutputString();
+            try {
+                Stringwriter(outSt,outFilePath());
+            } catch (IOException ex) {
+                Logger.getLogger(Gui.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
     }
     //generates a random salt using the system nativ RNG (this can lead to different generations depending on system and waht is used)
@@ -259,18 +274,25 @@ public class Gui extends Main implements ActionListener{
                     "Erorre",
                     JOptionPane.PLAIN_MESSAGE);
         }else{
-            String outputString = pswField.getText()+ "|" + Arrays.toString(curSalt) ;
+            String outputString = pswField.getText()+ "|" + Arrays.toString(curSalt) + "|" + Arrays.toString(curIV) ;
             System.out.println(outputString);
             return outputString;
         }
         return "there was a mistake";
     }
-    
-//convert the password into a bytes so that we can get them back 
-    /*
-    add to gui
-    - a way to see and add a key to decript it 
-    - a way to show the key 
-    - a button remove every pice from ram and stuff to wipe your pc from the genreation
-    */
+    //writes out to a file
+    public void Stringwriter(String intput, String Filepath) throws IOException{
+    File outFile = new File(Filepath);
+    BufferedWriter outwriter = new BufferedWriter(new FileWriter(Filepath));
+    outwriter.write(intput);
+    outwriter.close();
+    }
+    //this should return a String to a filepath where it gives out a random 5 digit number wich is used as a
+    public String outFilePath(){
+        Random rand = new Random();
+        int n = rand.nextInt(100000);
+        String dir = System.getProperty("user.dir");
+        String fpath = dir + "/" + "SavedEncriptionData" + Integer.toString(n) + ".txt";
+        return fpath; 
+    }
 }
