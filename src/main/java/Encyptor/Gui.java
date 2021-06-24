@@ -175,10 +175,10 @@ public class Gui extends Main implements ActionListener{
                 JOptionPane.showMessageDialog(frame,"Something went wrong during runtime\nplease check the Application logs","Error", JOptionPane.PLAIN_MESSAGE);
             }else{// there is stuff there and then try that
                 char[] pasw = (pswField.getText()).toCharArray();//converts the thing into a Char array
-                dir = dir + ".enc";
+                String tempdir = dir + ".enc";
                 try {//because the shit might fabyte[] iv = params.getParameterSpec(IvParameterSpec.class).getIV();il so there is a try statmen
                     //tring secretKey, String fileInputPath, String fileOutPath, JLabel status //retunr the salt that was used
-                    out = encryptedFile(pasw,path, dir,statusL,saltGen());//actually encryptes the thing and creates a new file with this 
+                    out = encryptedFile(pasw,path, tempdir,statusL,saltGen());//actually encryptes the thing and creates a new file with this 
                     //converting the output into theire own arrays and shit 
                     curSalt = out.retSalt();
                     curIV = out.retIv();
@@ -187,6 +187,7 @@ public class Gui extends Main implements ActionListener{
                 } catch (NoSuchAlgorithmException | NoSuchPaddingException | InvalidKeyException | IOException | IllegalBlockSizeException | BadPaddingException | InvalidKeySpecException | InvalidParameterSpecException ex) {
                     Logger.getLogger(Gui.class.getName()).log(Level.SEVERE, null, ex);
                     JOptionPane.showMessageDialog(frame,"Something went wrong during runtime\nplease check the Application logs","Error", JOptionPane.PLAIN_MESSAGE);
+                    statusL.setText("Errore");
                 }
             }
         }if(e.getSource()== showAllINfo){ 
@@ -228,26 +229,15 @@ public class Gui extends Main implements ActionListener{
             //decription 
         }if(e.getSource() == decripB){
             char[] pasw = (pswField.getText()).toCharArray();//converts the thing into a Char array
+            String tempdir = dir.replace(".enc", "");
             try {
-                deEcripedFiles(pasw,path,dir,statusL,curSalt,curIV);
-                //redo later to look better and  be shorter
-            } catch (NoSuchAlgorithmException ex) {
+                deEcripedFiles(pasw,path,tempdir,statusL,curSalt,curIV);
+            } catch (NoSuchAlgorithmException | NoSuchPaddingException | InvalidKeyException | IOException| IllegalBlockSizeException |BadPaddingException |InvalidKeySpecException |InvalidAlgorithmParameterException  ex) {
                 Logger.getLogger(Gui.class.getName()).log(Level.SEVERE, null, ex);
-            } catch (NoSuchPaddingException ex) {
-                Logger.getLogger(Gui.class.getName()).log(Level.SEVERE, null, ex);
-            } catch (InvalidKeyException ex) {
-                Logger.getLogger(Gui.class.getName()).log(Level.SEVERE, null, ex);
-            } catch (IOException ex) {
-                Logger.getLogger(Gui.class.getName()).log(Level.SEVERE, null, ex);
-            } catch (IllegalBlockSizeException ex) {
-                Logger.getLogger(Gui.class.getName()).log(Level.SEVERE, null, ex);
-            } catch (BadPaddingException ex) {
-                Logger.getLogger(Gui.class.getName()).log(Level.SEVERE, null, ex);
-            } catch (InvalidKeySpecException ex) {
-                Logger.getLogger(Gui.class.getName()).log(Level.SEVERE, null, ex);
-            } catch (InvalidAlgorithmParameterException ex) {
-                Logger.getLogger(Gui.class.getName()).log(Level.SEVERE, null, ex);
+                JOptionPane.showMessageDialog(frame,"Something went wrong during runtime\nplease check the Application logs","Error", JOptionPane.PLAIN_MESSAGE);
+                statusL.setText("Errore");
             }
+            
             
         //clears out all of the info that is saved 
         }if(e.getSource() == clearInfo){
