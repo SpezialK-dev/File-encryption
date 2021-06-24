@@ -50,7 +50,7 @@ public class EncAndDec extends Gui{
      * @throws InvalidKeySpecException
      * @throws InvalidParameterSpecException
      */
-public static Ouput encryptedFile(char[] password, String fileInputPath, String fileOutPath, JLabel status,byte[] salt)
+public static Output encryptedFile(char[] password, String fileInputPath, String fileOutPath, JLabel status,byte[] salt)
 throws NoSuchAlgorithmException, NoSuchPaddingException, InvalidKeyException, IOException,
 IllegalBlockSizeException, BadPaddingException, InvalidKeySpecException, InvalidParameterSpecException {
     //
@@ -85,7 +85,7 @@ IllegalBlockSizeException, BadPaddingException, InvalidKeySpecException, Invalid
     outputStream.close();
     status.setText("finished");
     
-    Ouput out = new Ouput();
+    Output out = new Output(iv,salt);
     return out;
     }
     //decriptor

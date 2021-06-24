@@ -2,6 +2,9 @@
 package Encyptor;
 
 import Encyptor.cipher.EncAndDec;
+import static Encyptor.cipher.EncAndDec.deEcripedFiles;
+import static Encyptor.cipher.EncAndDec.encryptedFile;
+import Encyptor.cipher.Output;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -9,6 +12,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
+import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
@@ -32,7 +36,7 @@ public class Gui extends Main implements ActionListener{
     JButton help = new JButton("Help");
     JButton showAllINfo = new JButton("all Info");
     JButton loadingFforD = new JButton("load config for Dec");
-    JButton clearSalt = new JButton("clear Salt");
+    JButton clearInfo = new JButton("clear Info");
     
     // all of the status text like what file got choosen and shit like that
     //encription labels
@@ -40,9 +44,8 @@ public class Gui extends Main implements ActionListener{
     JLabel statusFL = new JLabel("no file selected");
     JLabel statusL = new JLabel("No file Status");
     JLabel statusFNameL = new JLabel("no file name");
-    JLabel txtF = new JLabel("Key: ");
+    JLabel txtF = new JLabel("Key: ");//pasword
     //decription lables
-    JLabel keyL = new JLabel("decription Key: ");
     JLabel decripFile  = new JLabel("no file selected");//file path
     JLabel decripFileName = new JLabel("no file name");//fiole name
     JLabel saltL1 = new JLabel("decription Salt: ");
@@ -63,6 +66,8 @@ public class Gui extends Main implements ActionListener{
     private String Key; //the encyption key
     private String dir = System.getProperty("user.dir");
     private byte[] curSalt;
+    private byte[] curIV;
+    private Output out;
     
     public Gui(){
         this.keyField = new JTextField(260);
@@ -103,16 +108,13 @@ public class Gui extends Main implements ActionListener{
         loadingFforD.addActionListener(this);
         panel.add(loadingFforD);
         //Salt clear Button
-        clearSalt.setBounds(520,130,120,25);
-        clearSalt.addActionListener(this);
-        panel.add(clearSalt);
+        clearInfo.setBounds(520,130,120,25);
+        clearInfo.addActionListener(this);
+        panel.add(clearInfo);
         
         //adding the text field to enter in the key 
         pswField.setBounds(130,210,300,25);
         panel.add(pswField);
-        //adding the field for where a user could enter a secret key that then would be used to decript the thingi 
-        keyField.setBounds(130,240,300,25);
-        panel.add(keyField);
         //keyfield for the salt will need more stuff backend but this is just a non working intehration so that there is something there and not just somethign empty
         saltField.setBounds(130,270,300,25);
         panel.add(saltField);
@@ -131,8 +133,6 @@ public class Gui extends Main implements ActionListener{
         txtF.setBounds(20,210,40,25);
         panel.add(txtF);
         // add the decription text field
-        keyL.setBounds(20,240,120,25);
-        panel.add(keyL);
         //the label for th decription Salt 
         saltL1.setBounds(20,270,120,25);
         panel.add(saltL1);
@@ -166,7 +166,7 @@ public class Gui extends Main implements ActionListener{
                 statusFL.setText("File Path: "+ chooser.getSelectedFile().getPath());
                 statusFNameL.setText("File Name: " + chooser.getSelectedFile().getName());
                 path = chooser.getSelectedFile().getPath();
-                dir = (dir + chooser.getSelectedFile().getName()+".enc");
+                dir = (dir + chooser.getSelectedFile().getName());
                 
             }
         }if(e.getSource() == encriptB){
@@ -175,10 +175,15 @@ public class Gui extends Main implements ActionListener{
                 JOptionPane.showMessageDialog(frame,"Something went wrong during runtime\nplease check the Application logs","Error", JOptionPane.PLAIN_MESSAGE);
             }else{// there is stuff there and then try that
                 char[] pasw = (pswField.getText()).toCharArray();//converts the thing into a Char array
+                dir = dir + ".enc";
                 try {//because the shit might fabyte[] iv = params.getParameterSpec(IvParameterSpec.class).getIV();il so there is a try statmen
                     //tring secretKey, String fileInputPath, String fileOutPath, JLabel status //retunr the salt that was used
-                    curSalt = Encyptor.cipher.EncAndDec.encryptedFile(pasw,path, dir,statusL,saltGen());//actually encryptes the thing and creates a new file with this 
-                    // catch all of the exeptions
+                    out = encryptedFile(pasw,path, dir,statusL,saltGen());//actually encryptes the thing and creates a new file with this 
+                    //converting the output into theire own arrays and shit 
+                    curSalt = out.retSalt();
+                    curIV = out.retIv();
+                    out =  null;
+                // catch all of the exeptions 
                 } catch (NoSuchAlgorithmException | NoSuchPaddingException | InvalidKeyException | IOException | IllegalBlockSizeException | BadPaddingException | InvalidKeySpecException | InvalidParameterSpecException ex) {
                     Logger.getLogger(Gui.class.getName()).log(Level.SEVERE, null, ex);
                     JOptionPane.showMessageDialog(frame,"Something went wrong during runtime\nplease check the Application logs","Error", JOptionPane.PLAIN_MESSAGE);
@@ -189,7 +194,7 @@ public class Gui extends Main implements ActionListener{
                 "All information"
                     +"\nSalt : "+ Arrays.toString(curSalt)
                     +"\nCurrent Password : " + pswField.getText()
-                    +"\n"
+                    +"\nCurrent Starting paramenter : " + Arrays.toString(curIV)
                     +"\n"
                     +"\n"
                     +"\n",
@@ -201,12 +206,12 @@ public class Gui extends Main implements ActionListener{
                     "this is an help menue"
                         +"\nthis shows you how to use this program"
                         +"\n"
-                        +"\nthe Key Field should be used to enter the password that the user wants to use to encript the file"
+                        +"\nthe Key Field should be used to enter the password that the user wants to use to encript/decript the file"
                         +"\nthe decription Key could be enterd into the program if knowen "
                         +"\nthe password will be used with a random salt to generate the key for encription"
                         +"\nall info shows all of the information about the current salt and password"
                         +"\nload file should be used to load a file to de- or encript"
-                        +"\nclear Salt overwrites the variable for the salt"
+                        +"\nclear Info clears salt and IV"
                         +"\nthe password and salt can be reused to decript something imidialy"
                         +"\nso the salt stay in cach as long as the app is open "
                         +"\n"
@@ -217,12 +222,37 @@ public class Gui extends Main implements ActionListener{
             JFileChooser configL = new JFileChooser();
             int returnVal2 = configL.showOpenDialog(panel);
             if(returnVal2 == JFileChooser.APPROVE_OPTION){
-                System.out.println("feature currently unavailable  ");
+                decripFile.setText("File Path: "+ configL.getSelectedFile().getPath());
+                decripFileName.setText("File Name: " + configL.getSelectedFile().getName());
             } 
+            //decription 
         }if(e.getSource() == decripB){
-            creatingOutputString();
-        }if(e.getSource() == clearSalt){
+            char[] pasw = (pswField.getText()).toCharArray();//converts the thing into a Char array
+            try {
+                deEcripedFiles(pasw,path,dir,statusL,curSalt,curIV);
+                //redo later to look better and  be shorter
+            } catch (NoSuchAlgorithmException ex) {
+                Logger.getLogger(Gui.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (NoSuchPaddingException ex) {
+                Logger.getLogger(Gui.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (InvalidKeyException ex) {
+                Logger.getLogger(Gui.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (IOException ex) {
+                Logger.getLogger(Gui.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (IllegalBlockSizeException ex) {
+                Logger.getLogger(Gui.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (BadPaddingException ex) {
+                Logger.getLogger(Gui.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (InvalidKeySpecException ex) {
+                Logger.getLogger(Gui.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (InvalidAlgorithmParameterException ex) {
+                Logger.getLogger(Gui.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            
+        //clears out all of the info that is saved 
+        }if(e.getSource() == clearInfo){
             curSalt = null;
+            curIV = null;
         }
     }
     //generates a random salt using the system nativ RNG (this can lead to different generations depending on system and waht is used)
@@ -245,16 +275,8 @@ public class Gui extends Main implements ActionListener{
         }
         return "there was a mistake";
     }
-/*
-    public String convertbyteArrytoString(byte[] input){
-        int n = 0;
-        String output = "";
-        while(n < input.length){
-            output = (input[n]) + ",";
-            n++;
-        }
-        return output;
-    }*/
+    
+//convert the password into a bytes so that we can get them back 
     /*
     add to gui
     - a way to see and add a key to decript it 
