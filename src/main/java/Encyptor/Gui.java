@@ -1,19 +1,15 @@
 
 package Encyptor;
 
-import Encyptor.cipher.EncAndDec;
 import static Encyptor.cipher.EncAndDec.deEcripedFiles;
 import static Encyptor.cipher.EncAndDec.encryptedFile;
 import Encyptor.cipher.Output;
-import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.nio.charset.StandardCharsets;
 import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
@@ -28,7 +24,6 @@ import javax.crypto.BadPaddingException;
 import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.NoSuchPaddingException;
 import javax.swing.*;
-import javax.swing.filechooser.FileSystemView;
 
 public class Gui extends Main implements ActionListener{
     
@@ -55,11 +50,6 @@ public class Gui extends Main implements ActionListener{
     JLabel saltL1 = new JLabel("decription Salt: ");
     JLabel titelD = new JLabel("decription Files:");
     
-    //text fields
-    JTextField pswField = new JTextField("Password",30);//replace "Password with a randomly generated password(using somethign like salt gen or somethign else wich is strong and not really reversable)"
-    JTextField keyField = new JTextField(260);//the password field 
-    JTextField saltField = new JTextField();
-    
     //creates the panel and Frame
     JPanel panel = new JPanel();
     JFrame frame = new JFrame();
@@ -67,11 +57,16 @@ public class Gui extends Main implements ActionListener{
     
     //other generell Variables 
     private String path;
-    private String Key; //the encyption key
+    private String Key ; //the encyption key
     private String dir = System.getProperty("user.dir");
     private byte[] curSalt;
     private byte[] curIV;
     private Output out;
+    
+    //text fields
+    JTextField pswField = new JTextField("password",30);//replace "Password with a randomly generated password(using somethign like salt gen or somethign else wich is strong and not really reversable)"
+    JTextField keyField = new JTextField(260);//the password field 
+    JTextField saltField = new JTextField();
     
     public Gui(){
         this.keyField = new JTextField(260);
@@ -251,6 +246,7 @@ public class Gui extends Main implements ActionListener{
         }if(e.getSource() == clearInfo){
             curSalt = null;
             curIV = null;
+            
         }if(e.getSource() == saveConfig){
             String outSt = creatingOutputString();
             try {
@@ -273,7 +269,7 @@ public class Gui extends Main implements ActionListener{
                     "There was a fatal flaw",
                     "Erorre",
                     JOptionPane.PLAIN_MESSAGE);
-        }else{
+        }else{//password , salt, IV 
             String outputString = pswField.getText()+ "|" + Arrays.toString(curSalt) + "|" + Arrays.toString(curIV) ;
             System.out.println(outputString);
             return outputString;
