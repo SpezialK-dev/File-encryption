@@ -10,6 +10,8 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
@@ -222,13 +224,22 @@ public class Gui extends Main implements ActionListener{
                         +"\n",
                     "Help",
                     JOptionPane.PLAIN_MESSAGE);
+            //load the file for decription and also sets all of the files
         }if(e.getSource()== loadingFforD){
             JFileChooser configL = new JFileChooser();
             int returnVal2 = configL.showOpenDialog(panel);
             if(returnVal2 == JFileChooser.APPROVE_OPTION){
                 decripFile.setText("File Path: "+ configL.getSelectedFile().getPath());
                 decripFileName.setText("File Name: " + configL.getSelectedFile().getName());
+                try {
+                    String outputFileRead = readFile(configL.getSelectedFile().getPath());
+                } catch (IOException ex) {
+                    Logger.getLogger(Gui.class.getName()).log(Level.SEVERE, null, ex);
+                }
+                
             } 
+            
+            
             //decription 
         }if(e.getSource() == decripB){
             char[] pasw = (pswField.getText()).toCharArray();//converts the thing into a Char array
@@ -291,4 +302,15 @@ public class Gui extends Main implements ActionListener{
         String fpath = dir + "/" + "SavedEncriptionData" + Integer.toString(n) + ".txt";
         return fpath; 
     }
+    //file reader that gives out a single string 
+    public String readFile(String filePath) throws IOException{
+        Path path = Path.of(filePath);
+        String outString = Files.readString(path);
+        return outString;
+    }
+    //spliting the thing into different parts
+    public void split1(String inputString){
+        
+    }
+    
 }
