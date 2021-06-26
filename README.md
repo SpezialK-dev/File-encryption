@@ -1,7 +1,7 @@
-# this is an Encription Tool that uses AES256 Encription to encript your text files :
+# File-encryption
+This is an encryption tool that uses the AES256 cipher to encrypt your text files.
 
-it works by opening a file then pressing the encription button
-if you want to Decript the file just press decrpit but if want to eather decript it at a later date or want to send to another person press the save config button
-this should create a config with all the needed parameters needed to decript the file this file shoudl be located in you execution direcory(of the jar file)
+## How to use
+You can use the tool by selecting  a file then pressing the encryption button. If you want to decrypt the file just press "decrypt" however, if you want to decrypt it at a later date or want to send to another person, press the "save config" button. This should create a config with all the needed parameters needed to decrypt the file this file should be located in your execution directory (of the jar file).
 
-currently manually entering the values exept the password does not work because I haven't implemnted it yet but I will do so in the future so stay tuned for that. 
+Currently, manually entering the values except the password does not work because it is not implemented yet but will be in the future. 

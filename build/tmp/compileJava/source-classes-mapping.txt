@@ -1,2 +1,0 @@
-Encyptor/Main.java
- Encyptor.Main
