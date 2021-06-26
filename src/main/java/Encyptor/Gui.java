@@ -65,10 +65,13 @@ public class Gui extends Main implements ActionListener {
     //other general Variables
     private String path;
     private String Key; //the encryption key
+    //rework the way the program interacts with the os and where it saves data
     private String dir = System.getProperty("user.dir");
+    private String workingdir = System.getProperty("user.dir");
     private byte[] curSalt;
     private byte[] curIV;
     private Output out;
+    private String FileName;
 
     //text fields
     JTextField pswField = new JTextField("password", 30);//replace "Password with a randomly generated password(using somethign like salt gen or somethign else wich is strong and not really reversable)"
@@ -190,7 +193,7 @@ public class Gui extends Main implements ActionListener {
                 statusFL.setText("File Path: " + chooser.getSelectedFile().getPath());
                 statusFNameL.setText("File Name: " + chooser.getSelectedFile().getName());
                 path = chooser.getSelectedFile().getPath();
-                dir = (dir + chooser.getSelectedFile().getName());
+                FileName = (chooser.getSelectedFile().getName());
 
             }
         }
