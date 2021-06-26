@@ -61,10 +61,13 @@ public class Gui extends Main implements ActionListener{
     //other generell Variables
     private String path;
     private String Key ; //the encyption key
+    //rework the way the program interacts with the os and where it saves data
     private String dir = System.getProperty("user.dir");
+    private String workingdir = System.getProperty("user.dir");
     private byte[] curSalt;
     private byte[] curIV;
     private Output out;
+    private String FileName;
 
     //text fields
     JTextField pswField = new JTextField("password",30);//replace "Password with a randomly generated password(using somethign like salt gen or somethign else wich is strong and not really reversable)"
@@ -172,7 +175,7 @@ public class Gui extends Main implements ActionListener{
                 statusFL.setText("File Path: "+ chooser.getSelectedFile().getPath());
                 statusFNameL.setText("File Name: " + chooser.getSelectedFile().getName());
                 path = chooser.getSelectedFile().getPath();
-                dir = (dir + chooser.getSelectedFile().getName());
+                FileName = (chooser.getSelectedFile().getName());
 
             }
         }if(e.getSource() == encriptB){
@@ -181,7 +184,7 @@ public class Gui extends Main implements ActionListener{
                 JOptionPane.showMessageDialog(frame,"Something went wrong during runtime\nplease check the Application logs","Error", JOptionPane.PLAIN_MESSAGE);
             }else{// there is stuff there and then try that
                 char[] pasw = (pswField.getText()).toCharArray();//converts the thing into a Char array
-                String tempdir = dir + ".enc";
+                String tempdir = workingdir+ "/" +  FileName + ".enc";//creates the new name of the file
                 try {//because the shit might fabyte[] iv = params.getParameterSpec(IvParameterSpec.class).getIV();il so there is a try statmen
                      //returns a new type that has the salt and IV stored
                     out = encryptedFile(pasw,path, tempdir,statusL,saltGen());//actually encryptes the thing and creates a new file with this
@@ -193,7 +196,7 @@ public class Gui extends Main implements ActionListener{
                 } catch (NoSuchAlgorithmException | NoSuchPaddingException | InvalidKeyException | IOException | IllegalBlockSizeException | BadPaddingException | InvalidKeySpecException | InvalidParameterSpecException ex) {
                     Logger.getLogger(Gui.class.getName()).log(Level.SEVERE, null, ex);
                     JOptionPane.showMessageDialog(frame,"Something went wrong during runtime\nplease check the Application logs","Error", JOptionPane.PLAIN_MESSAGE);
-                    statusL.setText("Errore");
+                    statusL.setText("Error");
                 }
             }
         }if(e.getSource()== showAllINfo){
@@ -245,13 +248,14 @@ public class Gui extends Main implements ActionListener{
             //decription
         }if(e.getSource() == decripB){
             char[] pasw = (pswField.getText()).toCharArray();//converts the thing into a Char array
-            String tempdir = dir.replace(".enc", "");
+            String Filename2 = FileName.replaceAll(Pattern.quote(".enc"), "");
+            String tempdir = workingdir+ "/" +  Filename2;
             try {
                 deEcripedFiles(pasw,path,tempdir,statusL,curSalt,curIV);
             } catch (NoSuchAlgorithmException | NoSuchPaddingException | InvalidKeyException | IOException| IllegalBlockSizeException |BadPaddingException |InvalidKeySpecException |InvalidAlgorithmParameterException  ex) {
                 Logger.getLogger(Gui.class.getName()).log(Level.SEVERE, null, ex);
                 JOptionPane.showMessageDialog(frame,"Something went wrong during runtime\nplease check the Application logs","Error", JOptionPane.PLAIN_MESSAGE);
-                statusL.setText("Errore");
+                statusL.setText("Error");
             }
 
 
@@ -271,7 +275,7 @@ public class Gui extends Main implements ActionListener{
     }
     //generates a random salt using the system nativ RNG (this can lead to different generations depending on system and waht is used)
     private byte[] saltGen() throws NoSuchAlgorithmException{
-        SecureRandom sr = SecureRandom.getInstance("NativePRNG");//slowe and uses the system nativ defined RNG generator use "SHA1PRNG" if you want smth more consitend or faster
+        SecureRandom sr = SecureRandom.getInstance("NativePRNG");//slowe and uses the system nativ defined RNG generator use "SHA1PRNG" if you want smth more consistent or faster
 	byte[] bytes = new byte[16];
 	sr.nextBytes(bytes);
         return  bytes;
@@ -280,7 +284,7 @@ public class Gui extends Main implements ActionListener{
         if(curSalt == null|pswField.getText() == null){
                     JOptionPane.showMessageDialog(frame,
                     "There was a fatal flaw",
-                    "Erorre",
+                    "Error",
                     JOptionPane.PLAIN_MESSAGE);
         }else{//password , salt, IV
             String outputString = pswField.getText()+ "|" + Arrays.toString(curSalt) + "|" + Arrays.toString(curIV) ;
@@ -299,7 +303,6 @@ public class Gui extends Main implements ActionListener{
     public String outFilePath(){
         Random rand = new Random();
         int n = rand.nextInt(100000);
-        String dir = System.getProperty("user.dir");
         String fpath = dir + "/" + "SavedEncriptionData" + Integer.toString(n) + ".txt";
         return fpath;
     }
@@ -316,7 +319,7 @@ public class Gui extends Main implements ActionListener{
         //setting the password
         Key = split1[0];
         pswField.setText(split1[0]);
-        //converting these things to arrays and setting them approiatly 
+        //converting these things to arrays and setting them approiatly
         curSalt = StringTobyteArray(split1[1]);
         curIV = StringTobyteArray(split1[2]);
     }
@@ -332,7 +335,7 @@ public class Gui extends Main implements ActionListener{
         for(int i = 0; i < split2.length; i++) {
             bytes[i] = Byte.parseByte(split2[i]);
         }
-        
+
     return bytes;
     }
 
