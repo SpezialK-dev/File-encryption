@@ -303,9 +303,14 @@ public class Gui extends Main implements ActionListener {
      * add something so this also works under windows because that seems to have a problem with nativPRNG
      *
      */
-    private byte[] saltGen() throws NoSuchAlgorithmException {
+    private byte[] saltGen() throws NoSuchAlgorithmException 
+    {
         SecureRandom sr;
-        sr = SecureRandom.getInstance("NativePRNG"); //Slower and uses the system native defined RNG generator. (Use "SHA1PRNG" if you want something more consistent or faster)
+        try{
+             sr = SecureRandom.getInstance("NativePRNG"); //Slower and uses the system native defined RNG generator. (Use "SHA1PRNG" if you want something more consistent or faster)
+        }catch (NoSuchAlgorithmException e){
+            sr = SecureRandom.getInstanceStrong();
+        }
         byte[] bytes = new byte[16];
         sr.nextBytes(bytes);
         return bytes;
@@ -366,7 +371,6 @@ public class Gui extends Main implements ActionListener {
         inputString = inputString.replaceAll(Pattern.quote("["), "");
         inputString = inputString.replaceAll(Pattern.quote("]"), "");
         inputString = inputString.replaceAll(" ", "");
-        System.out.println(inputString);
         String[] split2 = inputString.split(Pattern.quote(","));
         byte[] bytes = new byte[split2.length];
 
