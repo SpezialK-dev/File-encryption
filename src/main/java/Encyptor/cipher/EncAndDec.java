@@ -73,7 +73,7 @@ IllegalBlockSizeException, BadPaddingException, InvalidKeySpecException, Invalid
     }
     //decriptor
 
-public static void deEcripedFiles(char[] password, String fileInputPath, String fileOutPath, JLabel status,byte[] salt,byte[] iv) 
+public static void DecriptionFiles(char[] password, String fileInputPath, String fileOutPath, JLabel status,byte[] salt,byte[] iv) 
         throws NoSuchAlgorithmException, NoSuchPaddingException, InvalidKeyException, FileNotFoundException, IOException, IllegalBlockSizeException, BadPaddingException, InvalidKeySpecException, InvalidAlgorithmParameterException{
         
    //Converting a key
