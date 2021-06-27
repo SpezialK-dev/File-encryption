@@ -1,7 +1,6 @@
 
 package Encyptor;
 
-import static Encyptor.cipher.EncAndDec.deEcripedFiles;
 import static Encyptor.cipher.EncAndDec.encryptedFile;
 
 import Encyptor.cipher.Output;
@@ -29,6 +28,7 @@ import javax.crypto.BadPaddingException;
 import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.NoSuchPaddingException;
 import javax.swing.*;
+import static Encyptor.cipher.EncAndDec.DecriptionFiles;
 
 /**
  *
@@ -213,7 +213,7 @@ public class Gui extends Main implements ActionListener {
                     curIV = out.retIv();
                     out = null;
                     // catch all of the exceptions
-                } catch (NoSuchAlgorithmException | NoSuchPaddingException | InvalidKeyException | IOException | IllegalBlockSizeException | BadPaddingException | InvalidKeySpecException | InvalidParameterSpecException ex) {
+                }catch (NoSuchAlgorithmException | NoSuchPaddingException | InvalidKeyException | IOException | IllegalBlockSizeException | BadPaddingException | InvalidKeySpecException | InvalidParameterSpecException ex) {
                     Logger.getLogger(Gui.class.getName()).log(Level.SEVERE, null, ex);
                     JOptionPane.showMessageDialog(frame, "Something went wrong during runtime\nplease check the Application logs", "Error", JOptionPane.PLAIN_MESSAGE);
                     statusL.setText("Error");
@@ -234,19 +234,19 @@ public class Gui extends Main implements ActionListener {
         }
         if (e.getSource() == help) {
             JOptionPane.showMessageDialog(frame,
-                    """
-                            Help menu
-
-                            The key field should be used to enter the password that the user wants to use to encrypt/decrypt the file.
-                            The decryption key could be entered into the program if known.
-                            The password will be used with a random salt to generate the encryption key.
-                            "All info" shows all of the information about the current salt and password.
-                            "load file" should be used to load a file to decrypt or encrypt it.
-                            "Clear info" clears salt and IV values.
-                            The password and salt can be reused to decrypt something immediately
-                            so the salt stay in cache for as long as the app is open.
-
-                            """,
+                    "this is an help menue"
+                        +"\nthis shows you how to use this program"
+                        +"\n"
+                        +"\nthe Key Field should be used to enter the password that the user wants to use to encript/decript the file"
+                        +"\nthe decription Key could be enterd into the program if knowen "
+                        +"\nthe password will be used with a random salt to generate the key for encription"
+                        +"\nall info shows all of the information about the current salt and password"
+                        +"\nload file should be used to load a file to de- or encript"
+                        +"\nclear Info clears salt and IV"
+                        +"\nthe password and salt can be reused to decript something imidialy"
+                        +"\nso the salt stay in cach as long as the app is open "
+                        +"\n"
+                        +"\n",
                     "Help",
                     JOptionPane.PLAIN_MESSAGE);
             //load the file for decryption and also sets all of the files
@@ -273,7 +273,7 @@ public class Gui extends Main implements ActionListener {
             char[] password = (pswField.getText()).toCharArray();//converts the thing into a Char array
             String tempdir = dir.replace(".enc", "");
             try {
-                deEcripedFiles(password, path, tempdir, statusL, curSalt, curIV);
+                DecriptionFiles(password, path, tempdir, statusL, curSalt, curIV);
             } catch (NoSuchAlgorithmException | NoSuchPaddingException | InvalidKeyException | IOException | IllegalBlockSizeException | BadPaddingException | InvalidKeySpecException | InvalidAlgorithmParameterException ex) {
                 Logger.getLogger(Gui.class.getName()).log(Level.SEVERE, null, ex);
                 JOptionPane.showMessageDialog(frame, "Something went wrong during runtime\nplease check the Application logs", "Error", JOptionPane.PLAIN_MESSAGE);
