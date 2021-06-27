@@ -203,7 +203,7 @@ public class Gui extends Main implements ActionListener {
                 JOptionPane.showMessageDialog(frame, "Something went wrong during runtime\nPlease check the Application logs", "Error", JOptionPane.PLAIN_MESSAGE);
             } else {// there is stuff there and then try that
                 char[] password = (pswField.getText()).toCharArray(); //converts the thing into a Char array
-                String tempdir = dir + ".enc";
+                String tempdir = workingdir+ "/"+ FileName + ".enc";
                 try {
                     //because the shit might fabyte[] iv = params.getParameterSpec(IvParameterSpec.class).getIV();il so there is a try statement
                     //returns a new type that has the salt and IV stored
@@ -338,7 +338,7 @@ public class Gui extends Main implements ActionListener {
 
     /**
      * TODO: Document
-     * this should return a String to a filepath where it gives out a random 5 digit number which is used as a
+     * this should return a String to a file Path where it gives out a random 5 digit number which is used as a
      *
      */
     public String outFilePath() {
@@ -362,14 +362,17 @@ public class Gui extends Main implements ActionListener {
         Key = split1[0];
         pswField.setText(split1[0]);
         //converting these things to arrays and setting them appropriately
-        curSalt = StringToByteArray(split1[1]);
-        curIV = StringToByteArray(split1[2]);
+        //so we remove all of the brackets befoqre we open this so I can reuse the other part
+        String thissalt =  split1[1].replaceAll(Pattern.quote("["),"");
+        thissalt =  split1[1].replaceAll(Pattern.quote("]"),"");
+        //the same thing as abouve but for the IV 
+        String thisiv =  split1[2].replaceAll(Pattern.quote("["),"");
+        thisiv =  split1[2].replaceAll(Pattern.quote("]"),"");
+        curSalt = StringToByteArray(thissalt);
+        curIV = StringToByteArray(thisiv);
     }
 
     public byte[] StringToByteArray(String inputString) {
-        //idk if there is a better way to do this
-        inputString = inputString.replaceAll(Pattern.quote("["), "");
-        inputString = inputString.replaceAll(Pattern.quote("]"), "");
         inputString = inputString.replaceAll(" ", "");
         String[] split2 = inputString.split(Pattern.quote(","));
         byte[] bytes = new byte[split2.length];
