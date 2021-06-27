@@ -271,7 +271,7 @@ public class Gui extends Main implements ActionListener {
         }
         if (e.getSource() == decryptButton) {
             char[] password = (pswField.getText()).toCharArray();//converts the thing into a Char array
-            String tempdir = dir.replace(".enc", "");
+            String tempdir = workingdir + FileName.replace(".enc", "");
             try {
                 DecriptionFiles(password, path, tempdir, statusL, curSalt, curIV);
             } catch (NoSuchAlgorithmException | NoSuchPaddingException | InvalidKeyException | IOException | IllegalBlockSizeException | BadPaddingException | InvalidKeySpecException | InvalidAlgorithmParameterException ex) {
@@ -298,13 +298,14 @@ public class Gui extends Main implements ActionListener {
     }
 
     // generates a random salt using the system native RNG (this can lead to different generations depending on system and what is used)
+       /**
+     * TODO: Document
+     * add something so this also works under windows because that seems to have a problem with nativPRNG
+     *
+     */
     private byte[] saltGen() throws NoSuchAlgorithmException {
         SecureRandom sr;
-        try {
-            sr = SecureRandom.getInstance("NativePRNG"); //Slower and uses the system native defined RNG generator. (Use "SHA1PRNG" if you want something more consistent or faster)
-        } catch (NoSuchAlgorithmException e) {
-            sr = SecureRandom.getInstance("SHA1PRNG"); // Fix for Windows maybe?
-        }
+        sr = SecureRandom.getInstance("NativePRNG"); //Slower and uses the system native defined RNG generator. (Use "SHA1PRNG" if you want something more consistent or faster)
         byte[] bytes = new byte[16];
         sr.nextBytes(bytes);
         return bytes;
