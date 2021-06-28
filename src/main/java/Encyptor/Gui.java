@@ -57,6 +57,7 @@ public class Gui extends Main implements ActionListener {
     JLabel decryptFileName = new JLabel("No file name");//file name
     JLabel saltL1 = new JLabel("Decryption Salt: ");
     JLabel titleD = new JLabel("Decryption Files:");
+    JLabel IVL1 = new JLabel("Decryption IV: ");
 
     //creates the panel and Frame
     JPanel panel = new JPanel();
@@ -65,10 +66,8 @@ public class Gui extends Main implements ActionListener {
 
     //other general Variables
     private String path;
-    private String Key; //the encryption key
     //rework the way the program interacts with the os and where it saves data
-    private String dir = System.getProperty("user.dir");
-    private String workingdir = System.getProperty("user.dir");
+    private final String workingdir = System.getProperty("user.dir");
     private byte[] curSalt;
     private byte[] curIV;
     private Output out;
@@ -76,11 +75,10 @@ public class Gui extends Main implements ActionListener {
 
     //text fields
     JTextField pswField = new JTextField("password", 30);//replace "Password with a randomly generated password(using somethign like salt gen or somethign else wich is strong and not really reversable)"
-    JTextField keyField = new JTextField(260);//the password field
-    JTextField saltField = new JTextField();
+    JTextField saltField = new JTextField(500);
+    JTextField ivField = new JTextField(500);
 
     public Gui() {
-        this.keyField = new JTextField(260);
 
         //general frame settings
         frame.setSize(700, 420);//values 500,270
@@ -133,6 +131,7 @@ public class Gui extends Main implements ActionListener {
         saveConfig.addActionListener(this);
         panel.add(saveConfig);
 
+        
         //adding the text field to enter in the key
         pswField.setBounds(130, 210, 300, 25);
         panel.add(pswField);
@@ -140,7 +139,10 @@ public class Gui extends Main implements ActionListener {
         //key field for the salt will need more stuff backend but this is just a non working intehration so that there is something there and not just somethign empty
         saltField.setBounds(130, 270, 300, 25);
         panel.add(saltField);
-
+        
+        //Iv Field so that you can enter is manually
+        ivField.setBounds(130,240,300,25);
+        panel.add(ivField);
 
         //adding text
         //just what file you have selected
@@ -180,6 +182,10 @@ public class Gui extends Main implements ActionListener {
         decryptFileName.setBounds(20, 360, 600, 25);
         panel.add(decryptFileName);
         //the title for the decryption
+        
+        //decription IV 
+        IVL1.setBounds(20,240,200,25);
+        panel.add(IVL1);
 
         frame.setVisible(true);
     }
@@ -204,7 +210,7 @@ public class Gui extends Main implements ActionListener {
                 JOptionPane.showMessageDialog(frame, "Something went wrong during runtime\nPlease check the Application logs", "Error", JOptionPane.PLAIN_MESSAGE);
             } else {// there is stuff there and then try that
                 char[] password = (pswField.getText()).toCharArray(); //converts the thing into a Char array
-                String tempdir = dir + ".enc";
+                String tempdir = workingdir+ "/"+ FileName + ".enc";
                 try {
                     //because the shit might fabyte[] iv = params.getParameterSpec(IvParameterSpec.class).getIV();il so there is a try statement
                     //returns a new type that has the salt and IV stored
@@ -284,9 +290,15 @@ public class Gui extends Main implements ActionListener {
             //clears out all of the info that is saved
         }
         if (e.getSource() == clearInfo) {
+            
+            //this is just temporary will be replaced with the keyfields
             curSalt = null;
             curIV = null;
-
+            //clearing all of the keyfields
+            saltField.setText("");
+            ivField.setText("");
+            pswField.setText("password");
+            
         }
         if (e.getSource() == saveConfig) {
             String outSt = creatingOutputString();
@@ -299,12 +311,8 @@ public class Gui extends Main implements ActionListener {
     }
 
     // generates a random salt using the system native RNG (this can lead to different generations depending on system and what is used)
-
-    /**
-     * TODO: Document
-     * add something so this also works under windows because that seems to have a problem with nativPRNG
-     */
-    private byte[] saltGen() throws NoSuchAlgorithmException {
+    private byte[] saltGen() throws NoSuchAlgorithmException 
+    {
         SecureRandom sr;
         try {
             sr = SecureRandom.getInstance("NativePRNG"); //Slower and uses the system native defined RNG generator. (Use "SHA1PRNG" if you want something more consistent or faster)
@@ -335,11 +343,6 @@ public class Gui extends Main implements ActionListener {
         outWriter.write(input);
         outWriter.close();
     }
-
-    /**
-     * TODO: Document
-     * this should return a String to a filepath where it gives out a random 5 digit number which is used as a
-     */
     public String outFilePath() {
         Random rand = new Random();
         int n = rand.nextInt(100000);
@@ -358,17 +361,32 @@ public class Gui extends Main implements ActionListener {
         String[] split1 = inputString.split(Pattern.quote("|"));//return the a list with everything separated //have to do this because this uses regular expression so this means smt
         //the only thing left is to convert the byte
         //setting the password
-        Key = split1[0];
         pswField.setText(split1[0]);
         //converting these things to arrays and setting them appropriately
-        curSalt = StringToByteArray(split1[1]);
-        curIV = StringToByteArray(split1[2]);
+        //so we remove all of the brackets befoqre we open this so I can reuse the other part
+        
+        String thissalt =  split1[1].replaceAll(Pattern.quote("]"),"");
+        thissalt =  thissalt.replaceAll(Pattern.quote("["),"");
+        
+        saltField.setText(thissalt);//spits out errors evn thought it whould work 
+        
+        //the same thing as abouve but for the IV 
+        String thisiv =  split1[2].replaceAll(Pattern.quote("["),"");
+        thisiv =  thisiv.replaceAll(Pattern.quote("]"),"");
+        
+        ivField.setText(thisiv);
+        
+        /**
+         * TODO 
+         * this needs to be replaced with just the set Text commands so the user can check if everything is correct
+         * 
+        */
+        curSalt = StringToByteArray(thissalt);
+        curIV = StringToByteArray(thisiv);
     }
-
+    
+    //converts smt to a bytearry used for iv, salt
     public byte[] StringToByteArray(String inputString) {
-        //idk if there is a better way to do this
-        inputString = inputString.replaceAll(Pattern.quote("["), "");
-        inputString = inputString.replaceAll(Pattern.quote("]"), "");
         inputString = inputString.replaceAll(" ", "");
         String[] split2 = inputString.split(Pattern.quote(","));
         byte[] bytes = new byte[split2.length];
