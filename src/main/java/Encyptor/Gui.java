@@ -66,8 +66,7 @@ public class Gui extends Main implements ActionListener {
     //other general Variables
     private String path;
     //rework the way the program interacts with the os and where it saves data
-    private String dir = System.getProperty("user.dir");
-    private String workingdir = System.getProperty("user.dir");
+    private final String workingdir = System.getProperty("user.dir");
     private byte[] curSalt;
     private byte[] curIV;
     private Output out;
