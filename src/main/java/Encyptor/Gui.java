@@ -31,9 +31,7 @@ import javax.swing.*;
 
 import static Encyptor.cipher.EncAndDec.DecriptionFiles;
 
-/**
- *
- */
+
 public class Gui extends Main implements ActionListener {
     //all of the buttons the program will have
     JButton decryptButton = new JButton("Decrypt");
