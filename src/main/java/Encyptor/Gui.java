@@ -28,6 +28,7 @@ import javax.crypto.BadPaddingException;
 import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.NoSuchPaddingException;
 import javax.swing.*;
+
 import static Encyptor.cipher.EncAndDec.DecriptionFiles;
 
 /**
@@ -219,7 +220,7 @@ public class Gui extends Main implements ActionListener {
                     curIV = out.retIv();
                     out = null;
                     // catch all of the exceptions
-                }catch (NoSuchAlgorithmException | NoSuchPaddingException | InvalidKeyException | IOException | IllegalBlockSizeException | BadPaddingException | InvalidKeySpecException | InvalidParameterSpecException ex) {
+                } catch (NoSuchAlgorithmException | NoSuchPaddingException | InvalidKeyException | IOException | IllegalBlockSizeException | BadPaddingException | InvalidKeySpecException | InvalidParameterSpecException ex) {
                     Logger.getLogger(Gui.class.getName()).log(Level.SEVERE, null, ex);
                     JOptionPane.showMessageDialog(frame, "Something went wrong during runtime\nplease check the Application logs", "Error", JOptionPane.PLAIN_MESSAGE);
                     statusL.setText("Error");
@@ -241,18 +242,18 @@ public class Gui extends Main implements ActionListener {
         if (e.getSource() == help) {
             JOptionPane.showMessageDialog(frame,
                     "this is an help menue"
-                        +"\nthis shows you how to use this program"
-                        +"\n"
-                        +"\nthe Key Field should be used to enter the password that the user wants to use to encript/decript the file"
-                        +"\nthe decription Key could be enterd into the program if knowen "
-                        +"\nthe password will be used with a random salt to generate the key for encription"
-                        +"\nall info shows all of the information about the current salt and password"
-                        +"\nload file should be used to load a file to de- or encript"
-                        +"\nclear Info clears salt and IV"
-                        +"\nthe password and salt can be reused to decript something imidialy"
-                        +"\nso the salt stay in cach as long as the app is open "
-                        +"\n"
-                        +"\n",
+                            + "\nthis shows you how to use this program"
+                            + "\n"
+                            + "\nthe Key Field should be used to enter the password that the user wants to use to encript/decript the file"
+                            + "\nthe decription Key could be enterd into the program if knowen "
+                            + "\nthe password will be used with a random salt to generate the key for encription"
+                            + "\nall info shows all of the information about the current salt and password"
+                            + "\nload file should be used to load a file to de- or encript"
+                            + "\nclear Info clears salt and IV"
+                            + "\nthe password and salt can be reused to decript something imidialy"
+                            + "\nso the salt stay in cach as long as the app is open "
+                            + "\n"
+                            + "\n",
                     "Help",
                     JOptionPane.PLAIN_MESSAGE);
             //load the file for decryption and also sets all of the files
@@ -313,9 +314,9 @@ public class Gui extends Main implements ActionListener {
     private byte[] saltGen() throws NoSuchAlgorithmException 
     {
         SecureRandom sr;
-        try{
-             sr = SecureRandom.getInstance("NativePRNG"); //Slower and uses the system native defined RNG generator. (Use "SHA1PRNG" if you want something more consistent or faster)
-        }catch (NoSuchAlgorithmException e){
+        try {
+            sr = SecureRandom.getInstance("NativePRNG"); //Slower and uses the system native defined RNG generator. (Use "SHA1PRNG" if you want something more consistent or faster)
+        } catch (NoSuchAlgorithmException e) {
             sr = SecureRandom.getInstanceStrong();
         }
         byte[] bytes = new byte[16];
