@@ -70,6 +70,8 @@ public class Gui extends Main implements ActionListener {
     private byte[] curIV;
     private Output out;
     private String FileName;
+    private byte[] tempsalt;
+    private byte[] tempiv;
 
     //text fields
     JTextField pswField = new JTextField("password", 30);//replace "Password with a randomly generated password(using somethign like salt gen or somethign else wich is strong and not really reversable)"
@@ -216,6 +218,9 @@ public class Gui extends Main implements ActionListener {
                     //converting the output into their own arrays
                     curSalt = out.retSalt();
                     curIV = out.retIv();
+                    //setting the text fields
+                    saltField.setText(Arrays.toString(out.retSalt()));
+                    ivField.setText(Arrays.toString(out.retIv()));
                     out = null;
                     // catch all of the exceptions
                 } catch (NoSuchAlgorithmException | NoSuchPaddingException | InvalidKeyException | IOException | IllegalBlockSizeException | BadPaddingException | InvalidKeySpecException | InvalidParameterSpecException ex) {
@@ -224,13 +229,18 @@ public class Gui extends Main implements ActionListener {
                     statusL.setText("Error");
                 }
             }
+            
         }
+        /**
+         * TODO 
+         * remove the bracktes from the text (this should be done in the encription class by converting it to string beforehand and then removing all of the brackets)
+         */
         if (e.getSource() == showAllINfo) {
             JOptionPane.showMessageDialog(frame,
                     "All information"
-                            + "\nSalt : " + Arrays.toString(curSalt)
+                            + "\nSalt : " + saltField.getText()
                             + "\nCurrent Password : " + pswField.getText()
-                            + "\nCurrent Starting paramenter : " + Arrays.toString(curIV)
+                            + "\nCurrent Starting paramenter : " + ivField.getText()
                             + "\n"
                             + "\n"
                             + "\n",
@@ -268,7 +278,7 @@ public class Gui extends Main implements ActionListener {
                 } catch (IOException ex) {
                     Logger.getLogger(Gui.class.getName()).log(Level.SEVERE, null, ex);
                 }
-                split1(outputFileRead);
+                splitAndConvertandSetParameters(outputFileRead);
             }
 
 
@@ -277,8 +287,18 @@ public class Gui extends Main implements ActionListener {
         if (e.getSource() == decryptButton) {
             char[] password = (pswField.getText()).toCharArray();//converts the thing into a Char array
             String tempdir = workingdir + FileName.replace(".enc", "");
+            if(saltField.getText()== ""){
+                tempsalt = curSalt;
+            } else {
+                tempsalt = StringToByteArray(saltField.getText());
+            }
+            if(ivField.getText()== ""){
+                tempiv = curIV;
+            } else {
+                tempiv = StringToByteArray(ivField.getText());
+            }
             try {
-                DecriptionFiles(password, path, tempdir, statusL, curSalt, curIV);
+                DecriptionFiles(password, path, tempdir, statusL, tempsalt, tempiv);
             } catch (NoSuchAlgorithmException | NoSuchPaddingException | InvalidKeyException | IOException | IllegalBlockSizeException | BadPaddingException | InvalidKeySpecException | InvalidAlgorithmParameterException ex) {
                 Logger.getLogger(Gui.class.getName()).log(Level.SEVERE, null, ex);
                 JOptionPane.showMessageDialog(frame, "Something went wrong during runtime\nplease check the Application logs", "Error", JOptionPane.PLAIN_MESSAGE);
@@ -354,7 +374,7 @@ public class Gui extends Main implements ActionListener {
     }
 
     //splitting the thing into different parts
-    public void split1(String inputString) {
+    public void splitAndConvertandSetParameters(String inputString) {
         String[] split1 = inputString.split(Pattern.quote("|"));//return the a list with everything separated //have to do this because this uses regular expression so this means smt
         //the only thing left is to convert the byte
         //setting the password
