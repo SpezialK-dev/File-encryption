@@ -31,33 +31,31 @@ import javax.swing.*;
 
 import static Encyptor.cipher.EncAndDec.DecriptionFiles;
 
-/**
- *
- */
+
 public class Gui extends Main implements ActionListener {
     //all of the buttons the program will have
-    JButton decryptButton = new JButton("Decrypt");
-    JButton encryptButton = new JButton("Encrypt");
-    JButton openFile = new JButton("Open file");
-    JButton help = new JButton("Help");
-    JButton showAllINfo = new JButton("All info");
-    JButton loadConfigButton = new JButton("Load config for decryption");
-    JButton clearInfo = new JButton("Clear info");
-    JButton saveConfig = new JButton("Save config");
+    private final JButton decryptButton = new JButton("Decrypt");
+    private final JButton encryptButton = new JButton("Encrypt");
+    private final JButton openFile = new JButton("Open file");
+    private final JButton help = new JButton("Help");
+    private final JButton showAllINfo = new JButton("All info");
+    private final JButton loadConfigButton = new JButton("Load config for decryption");
+    private final JButton clearInfo = new JButton("Clear info");
+    private final JButton saveConfig = new JButton("Save config");
 
     // all of the status text like what file got chosen and shit like that
     //Encryption labels
-    JLabel titleE = new JLabel("Encryption files");
-    JLabel statusFL = new JLabel("No file selected");
-    JLabel statusL = new JLabel("No file status");
-    JLabel statusFNameL = new JLabel("No file name");
-    JLabel txtF = new JLabel("Key: ");//password
+    private final JLabel titleE = new JLabel("Encryption files");
+    private final JLabel statusFL = new JLabel("No file selected");
+    private final JLabel statusL = new JLabel("No file status");
+    private final JLabel statusFNameL = new JLabel("No file name");
+    private final JLabel txtF = new JLabel("Key: ");//password
     //Decryption labels
-    JLabel decryptFile = new JLabel("No file selected");//file path
-    JLabel decryptFileName = new JLabel("No file name");//file name
-    JLabel saltL1 = new JLabel("Decryption Salt: ");
-    JLabel titleD = new JLabel("Decryption Files:");
-    JLabel IVL1 = new JLabel("Decryption IV: ");
+    private final JLabel decryptFile = new JLabel("No file selected");//file path
+    private final JLabel decryptFileName = new JLabel("No file name");//file name
+    private final JLabel saltL1 = new JLabel("Decryption Salt: ");
+    private final JLabel titleD = new JLabel("Decryption Files:");
+    private final JLabel IVL1 = new JLabel("Decryption IV: ");
 
     //creates the panel and Frame
     JPanel panel = new JPanel();
@@ -286,7 +284,6 @@ public class Gui extends Main implements ActionListener {
                 JOptionPane.showMessageDialog(frame, "Something went wrong during runtime\nplease check the Application logs", "Error", JOptionPane.PLAIN_MESSAGE);
                 statusL.setText("Error");
             }
-
             //clears out all of the info that is saved
         }
         if (e.getSource() == clearInfo) {
