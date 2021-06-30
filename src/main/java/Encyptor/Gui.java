@@ -218,9 +218,22 @@ public class Gui extends Main implements ActionListener {
                     //converting the output into their own arrays
                     curSalt = out.retSalt();
                     curIV = out.retIv();
+                    //doing the conversion 
+                    //getting all of the variables and converting it to a string 
+                    String temporarysalt = Arrays.toString(out.retSalt());
+                    String temporaryiv = Arrays.toString(out.retIv());
+                    //removing all of the brackets
+                    //for salt
+                    temporarysalt=  temporarysalt.replaceAll(Pattern.quote("["),"");
+                    temporarysalt=  temporarysalt.replaceAll(Pattern.quote("]"),"");
+                    //for iv 
+                    temporaryiv=  temporaryiv.replaceAll(Pattern.quote("["),"");
+                    temporaryiv=  temporaryiv.replaceAll(Pattern.quote("]"),"");
                     //setting the text fields
-                    saltField.setText(Arrays.toString(out.retSalt()));
-                    ivField.setText(Arrays.toString(out.retIv()));
+                    saltField.setText(temporarysalt);
+                    ivField.setText(temporaryiv);
+                    temporaryiv = null;
+                    temporarysalt = null;
                     out = null;
                     // catch all of the exceptions
                 } catch (NoSuchAlgorithmException | NoSuchPaddingException | InvalidKeyException | IOException | IllegalBlockSizeException | BadPaddingException | InvalidKeySpecException | InvalidParameterSpecException ex) {
