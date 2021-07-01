@@ -1,8 +1,7 @@
 
 package Encyptor;
 
-import static Encyptor.cipher.EncAndDec.encryptedFile;
-
+import static Encyptor.cipher.EncAndDec.*;
 import Encyptor.cipher.Output;
 
 import java.awt.event.ActionEvent;
@@ -29,7 +28,6 @@ import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.NoSuchPaddingException;
 import javax.swing.*;
 
-import static Encyptor.cipher.EncAndDec.DecriptionFiles;
 
 
 public class Gui extends Main implements ActionListener {
@@ -254,7 +252,7 @@ public class Gui extends Main implements ActionListener {
                             + "\nSalt : " + saltField.getText()
                             + "\nCurrent Password : " + pswField.getText()
                             + "\nCurrent Starting paramenter : " + ivField.getText()
-                            + "\n"
+                            + "\nCharater set Used: UTF 8"
                             + "\n"
                             + "\n",
                     "Information",
@@ -299,7 +297,7 @@ public class Gui extends Main implements ActionListener {
         }
         if (e.getSource() == decryptButton) {
             char[] password = (pswField.getText()).toCharArray();//converts the thing into a Char array
-            String tempdir = workingdir + FileName.replace(".enc", "");
+            String tempdir = workingdir+ "/" + FileName.replace(".enc", "");
             if(saltField.getText()== ""){
                 tempsalt = curSalt;
             } else {
@@ -327,8 +325,7 @@ public class Gui extends Main implements ActionListener {
             //clearing all of the keyfields
             saltField.setText("");
             ivField.setText("");
-            pswField.setText("password");
-            
+            pswField.setText("password");            
         }
         if (e.getSource() == saveConfig) {
             String outSt = creatingOutputString();
