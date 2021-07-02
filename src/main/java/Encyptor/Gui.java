@@ -40,6 +40,7 @@ public class Gui extends Main implements ActionListener {
     private final JButton loadConfigButton = new JButton("Load config for decryption");
     private final JButton clearInfo = new JButton("Clear info");
     private final JButton saveConfig = new JButton("Save config");
+    
 
     // all of the status text like what file got chosen and shit like that
     //Encryption labels
@@ -54,6 +55,9 @@ public class Gui extends Main implements ActionListener {
     private final JLabel saltL1 = new JLabel("Decryption Salt: ");
     private final JLabel titleD = new JLabel("Decryption Files:");
     private final JLabel IVL1 = new JLabel("Decryption IV: ");
+    //generell Stuff 
+    private final JLabel deleteConf = new JLabel("Delete Config after usag");
+    private final JLabel deleteFile = new JLabel("Delete File after usag");
 
     //creates the panel and Frame
     JPanel panel = new JPanel();
@@ -142,6 +146,7 @@ public class Gui extends Main implements ActionListener {
         ivField.setBounds(130,240,300,25);
         panel.add(ivField);
 
+        
         //adding text
         //just what file you have selected
         statusFL.setBounds(20, 50, 600, 25);
@@ -184,6 +189,9 @@ public class Gui extends Main implements ActionListener {
         //decription IV 
         IVL1.setBounds(20,240,200,25);
         panel.add(IVL1);
+        
+        //Check boxes 
+        
 
         frame.setVisible(true);
     }
@@ -271,8 +279,8 @@ public class Gui extends Main implements ActionListener {
                             + "\nclear Info clears salt and IV"
                             + "\nthe password and salt can be reused to decript something imidialy"
                             + "\nso the salt stay in cach as long as the app is open "
-                            + "\n"
-                            + "\n",
+                            + "\nselecthing for the file to be delted after usage deltes the File after is was used this is not a safe delete So"
+                            + "\nthere is the possibilty for the File to be recoverd after deletion",
                     "Help",
                     JOptionPane.PLAIN_MESSAGE);
             //load the file for decryption and also sets all of the files
