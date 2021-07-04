@@ -6,6 +6,7 @@ import Encyptor.cipher.Output;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.ItemEvent;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
@@ -41,6 +42,9 @@ public class Gui extends Main implements ActionListener {
     private final JButton clearInfo = new JButton("Clear info");
     private final JButton saveConfig = new JButton("Save config");
     
+    //all of the check boxes 
+    private final JCheckBox deleteConf  = new JCheckBox("Delete Config after usag",false);
+    private final JCheckBox deleteFile = new JCheckBox("Delete File after usag", false);
 
     // all of the status text like what file got chosen and shit like that
     //Encryption labels
@@ -55,9 +59,7 @@ public class Gui extends Main implements ActionListener {
     private final JLabel saltL1 = new JLabel("Decryption Salt: ");
     private final JLabel titleD = new JLabel("Decryption Files:");
     private final JLabel IVL1 = new JLabel("Decryption IV: ");
-    //generell Stuff 
-    private final JLabel deleteConf = new JLabel("Delete Config after usag");
-    private final JLabel deleteFile = new JLabel("Delete File after usag");
+
 
     //creates the panel and Frame
     JPanel panel = new JPanel();
@@ -74,6 +76,8 @@ public class Gui extends Main implements ActionListener {
     private String FileName;
     private byte[] tempsalt;
     private byte[] tempiv;
+    private String ConfigFilePath;
+    private String ChoosenFilePath;
 
     //text fields
     JTextField pswField = new JTextField("password", 30);//replace "Password with a randomly generated password(using somethign like salt gen or somethign else wich is strong and not really reversable)"
@@ -93,7 +97,8 @@ public class Gui extends Main implements ActionListener {
 
 
         //adding all of the buttons
-        //open file button
+        //open file buttoni just tend to get on the wrong side of tiktok
+
         openFile.setBounds(40, 170, 100, 25);
         openFile.addActionListener(this);
         panel.add(openFile);
@@ -190,26 +195,45 @@ public class Gui extends Main implements ActionListener {
         IVL1.setBounds(20,240,200,25);
         panel.add(IVL1);
         
-        //Check boxes 
+        //Check boxes
+        /**
+         *TODO
+         * add a item even to this 
+         */ 
+        // adding the first checkmark
+        deleteConf.setBounds(230, 90,200,25);
+        deleteConf.addActionListener(this);
+        panel.add(deleteConf);
+        //add the second chechmark
+        deleteFile.setBounds(430, 90,200,25);
+        deleteFile.addItemListener(new ItemEvent());
+        panel.add(deleteFile);
         
-
         frame.setVisible(true);
     }
 
     @Override
     public void actionPerformed(ActionEvent e) {
+        //this open the target File we want to use to eather dec or enc
         if (e.getSource() == openFile) {
             JFileChooser chooser = new JFileChooser();
             int returnVal = chooser.showOpenDialog(panel);
             if (returnVal == JFileChooser.APPROVE_OPTION) {
                 //setting all of the statuses and giving out the path for everything
                 statusFL.setText("File Path: " + chooser.getSelectedFile().getPath());
+                ChoosenFilePath = chooser.getSelectedFile().getPath();
                 statusFNameL.setText("File Name: " + chooser.getSelectedFile().getName());
                 path = chooser.getSelectedFile().getPath();
                 FileName = (chooser.getSelectedFile().getName());
 
             }
         }
+        /**
+         * TODO 
+         * add smt for item deletion 
+         */
+       
+
         if (e.getSource() == encryptButton) {
             //if stuff is empty give out an Error
             if (pswField.getText().trim().length() == 0 || path.trim().length() == 0) { //TODO: redo this to make a popup
@@ -291,6 +315,7 @@ public class Gui extends Main implements ActionListener {
             int returnVal2 = configL.showOpenDialog(panel);
             if (returnVal2 == JFileChooser.APPROVE_OPTION) {
                 decryptFile.setText("File Path: " + configL.getSelectedFile().getPath());
+                ConfigFilePath = configL.getSelectedFile().getPath();
                 decryptFileName.setText("File Name: " + configL.getSelectedFile().getName());
                 try {
                     outputFileRead = readFile(configL.getSelectedFile().getPath());
@@ -303,6 +328,10 @@ public class Gui extends Main implements ActionListener {
 
             //decryption
         }
+        /**
+         * TODO
+         * add the thing for File deletion
+         */
         if (e.getSource() == decryptButton) {
             char[] password = (pswField.getText()).toCharArray();//converts the thing into a Char array
             String tempdir = workingdir+ "/" + FileName.replace(".enc", "");
@@ -343,6 +372,10 @@ public class Gui extends Main implements ActionListener {
                 Logger.getLogger(Gui.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
+            //these are the commands for File deletion just so  i Can copy and paste them later in when I have the
+            //thing with item listeners finished
+            //deleteFile(ConfigFilePath);
+            //deleteFile(ChoosenFilePath);
     }
 
     // generates a random salt using the system native RNG (this can lead to different generations depending on system and what is used)
@@ -432,5 +465,21 @@ public class Gui extends Main implements ActionListener {
 
         return bytes;
     }
-
+    //all of the File deletion 
+    public void deleteFile(String Filepath){
+        File toDel = new File(Filepath);
+        if (toDel.delete()){
+            System.out.println("succes with deletion ");
+        }else{
+            System.out.println("Failed to delte the File");
+            JOptionPane.showMessageDialog(frame,
+                    "There was a fatal flaw",
+                    "Error",
+                    JOptionPane.PLAIN_MESSAGE);
+        }
+    }
+    /**
+     * TODO 
+     * add smt for item listeners
+     */
 }
