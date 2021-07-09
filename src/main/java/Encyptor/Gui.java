@@ -206,7 +206,7 @@ public class Gui extends Main implements ActionListener {
         panel.add(deleteConf);
         //add the second chechmark
         deleteFile.setBounds(430, 90,200,25);
-        deleteFile.addItemListener(new ItemEvent());
+        deleteFile.addActionListener(this);
         panel.add(deleteFile);
         
         frame.setVisible(true);
@@ -228,19 +228,14 @@ public class Gui extends Main implements ActionListener {
 
             }
         }
-        /**
-         * TODO 
-         * add smt for item deletion 
-         */
-       
 
         if (e.getSource() == encryptButton) {
             //if stuff is empty give out an Error
-            if (pswField.getText().trim().length() == 0 || path.trim().length() == 0) { //TODO: redo this to make a popup
-                JOptionPane.showMessageDialog(frame, "Something went wrong during runtime\nPlease check the Application logs", "Error", JOptionPane.PLAIN_MESSAGE);
+            if (pswField.getText().trim().length() == 0 || path.trim().length() == 0) {
+                JOptionPane.showMessageDialog(frame, "something was missing and it could not encrypt", "Error", JOptionPane.PLAIN_MESSAGE);
             } else {// there is stuff there and then try that
                 char[] password = (pswField.getText()).toCharArray(); //converts the thing into a Char array
-                String tempdir = workingdir+ "/"+ FileName + ".enc";
+                String tempdir = workingdir+ "/"+ FileName + ".enc";//the path to wich we encript to 
                 try {
                     //because the shit might fabyte[] iv = params.getParameterSpec(IvParameterSpec.class).getIV();il so there is a try statement
                     //returns a new type that has the salt and IV stored
@@ -265,6 +260,12 @@ public class Gui extends Main implements ActionListener {
                     temporaryiv = null;
                     temporarysalt = null;
                     out = null;
+                    //file deletion 
+                    //deleting the actuall file
+                    if(deleteFile.isSelected() == true){
+                        System.out.println("File was delted at: "+ path);
+                        deleteFile(path);
+                    }
                     // catch all of the exceptions
                 } catch (NoSuchAlgorithmException | NoSuchPaddingException | InvalidKeyException | IOException | IllegalBlockSizeException | BadPaddingException | InvalidKeySpecException | InvalidParameterSpecException ex) {
                     Logger.getLogger(Gui.class.getName()).log(Level.SEVERE, null, ex);
@@ -290,6 +291,7 @@ public class Gui extends Main implements ActionListener {
                     "Information",
                     JOptionPane.PLAIN_MESSAGE);
         }
+        //the help menue
         if (e.getSource() == help) {
             JOptionPane.showMessageDialog(frame,
                     "this is an help menue"
@@ -307,8 +309,9 @@ public class Gui extends Main implements ActionListener {
                             + "\nthere is the possibilty for the File to be recoverd after deletion",
                     "Help",
                     JOptionPane.PLAIN_MESSAGE);
-            //load the file for decryption and also sets all of the files
-        }
+        
+//load the file for decryption and also sets all of the files
+        }//this loads a config 
         if (e.getSource() == loadConfigButton) {
             String outputFileRead = "";
             JFileChooser configL = new JFileChooser();
@@ -317,6 +320,7 @@ public class Gui extends Main implements ActionListener {
                 decryptFile.setText("File Path: " + configL.getSelectedFile().getPath());
                 ConfigFilePath = configL.getSelectedFile().getPath();
                 decryptFileName.setText("File Name: " + configL.getSelectedFile().getName());
+                
                 try {
                     outputFileRead = readFile(configL.getSelectedFile().getPath());
                 } catch (IOException ex) {
@@ -328,25 +332,36 @@ public class Gui extends Main implements ActionListener {
 
             //decryption
         }
-        /**
-         * TODO
-         * add the thing for File deletion
-         */
         if (e.getSource() == decryptButton) {
             char[] password = (pswField.getText()).toCharArray();//converts the thing into a Char array
             String tempdir = workingdir+ "/" + FileName.replace(".enc", "");
+            //selecting everything to use
+            //salt
             if(saltField.getText()== ""){
                 tempsalt = curSalt;
             } else {
                 tempsalt = StringToByteArray(saltField.getText());
             }
+            //IV
             if(ivField.getText()== ""){
                 tempiv = curIV;
             } else {
                 tempiv = StringToByteArray(ivField.getText());
             }
+            //actual encription
             try {
                 DecriptionFiles(password, path, tempdir, statusL, tempsalt, tempiv);
+            //file deletion 
+            //the actual File 
+            if(deleteFile.isSelected() == true){
+                System.out.println("delteing the original File: "+ path);
+                deleteFile(path);
+            }
+            //the config
+            if(deleteConf.isSelected() == true){
+                System.out.println("Deleting the config File: "+ ConfigFilePath);
+                deleteFile(ConfigFilePath);               
+            }
             } catch (NoSuchAlgorithmException | NoSuchPaddingException | InvalidKeyException | IOException | IllegalBlockSizeException | BadPaddingException | InvalidKeySpecException | InvalidAlgorithmParameterException ex) {
                 Logger.getLogger(Gui.class.getName()).log(Level.SEVERE, null, ex);
                 JOptionPane.showMessageDialog(frame, "Something went wrong during runtime\nplease check the Application logs", "Error", JOptionPane.PLAIN_MESSAGE);
@@ -363,7 +378,7 @@ public class Gui extends Main implements ActionListener {
             saltField.setText("");
             ivField.setText("");
             pswField.setText("password");            
-        }
+        }//saves all of the info toa file
         if (e.getSource() == saveConfig) {
             String outSt = creatingOutputString();
             try {
@@ -372,10 +387,6 @@ public class Gui extends Main implements ActionListener {
                 Logger.getLogger(Gui.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
-            //these are the commands for File deletion just so  i Can copy and paste them later in when I have the
-            //thing with item listeners finished
-            //deleteFile(ConfigFilePath);
-            //deleteFile(ChoosenFilePath);
     }
 
     // generates a random salt using the system native RNG (this can lead to different generations depending on system and what is used)
@@ -391,7 +402,7 @@ public class Gui extends Main implements ActionListener {
         sr.nextBytes(bytes);
         return bytes;
     }
-
+    //converts everythign into a single string that can be writen out to a file
     public String creatingOutputString() {
         if (curSalt == null | pswField.getText() == null) {
             JOptionPane.showMessageDialog(frame,
@@ -411,6 +422,7 @@ public class Gui extends Main implements ActionListener {
         outWriter.write(input);
         outWriter.close();
     }
+    //gives out the path for the file also generates the random name that is gonna be used
     public String outFilePath() {
         Random rand = new Random();
         int n = rand.nextInt(100000);
@@ -444,11 +456,7 @@ public class Gui extends Main implements ActionListener {
         
         ivField.setText(thisiv);
         
-        /**
-         * TODO 
-         * this needs to be replaced with just the set Text commands so the user can check if everything is correct
-         * 
-        */
+        //ima just leave this here as a backup but this is not acutally need and could be removed 
         curSalt = StringToByteArray(thissalt);
         curIV = StringToByteArray(thisiv);
     }
@@ -478,8 +486,4 @@ public class Gui extends Main implements ActionListener {
                     JOptionPane.PLAIN_MESSAGE);
         }
     }
-    /**
-     * TODO 
-     * add smt for item listeners
-     */
 }
