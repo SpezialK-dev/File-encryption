@@ -45,6 +45,8 @@ public class Gui extends Main implements ActionListener {
     //all of the check boxes 
     private final JCheckBox deleteConf  = new JCheckBox("Delete Config after usag",false);
     private final JCheckBox deleteFile = new JCheckBox("Delete File after usag", false);
+    //the check box for images
+    private final JCheckBox imageex = new JCheckBox("export as image");
 
     // all of the status text like what file got chosen and shit like that
     //Encryption labels
@@ -119,7 +121,7 @@ public class Gui extends Main implements ActionListener {
         panel.add(showAllINfo);
 
         //help button
-        help.setBounds(520, 170, 120, 25);
+        help.setBounds(550, 170, 120, 25);
         help.addActionListener(this);
         panel.add(help);
 
@@ -129,12 +131,12 @@ public class Gui extends Main implements ActionListener {
         panel.add(loadConfigButton);
 
         //Salt clear button
-        clearInfo.setBounds(520, 130, 120, 25);
+        clearInfo.setBounds(550, 130, 120, 25);
         clearInfo.addActionListener(this);
         panel.add(clearInfo);
 
         //saves the config to your hard drive so you can send it to someone
-        saveConfig.setBounds(520, 210, 120, 25);
+        saveConfig.setBounds(550, 210, 120, 25);
         saveConfig.addActionListener(this);
         panel.add(saveConfig);
 
@@ -196,10 +198,6 @@ public class Gui extends Main implements ActionListener {
         panel.add(IVL1);
         
         //Check boxes
-        /**
-         *TODO
-         * add a item even to this 
-         */ 
         // adding the first checkmark
         deleteConf.setBounds(230, 90,200,25);
         deleteConf.addActionListener(this);
@@ -208,6 +206,10 @@ public class Gui extends Main implements ActionListener {
         deleteFile.setBounds(430, 90,200,25);
         deleteFile.addActionListener(this);
         panel.add(deleteFile);
+        //the second check box
+        imageex.setBounds(390,170,150,25);
+        imageex.addActionListener(this);
+        panel.add(imageex);
         
         frame.setVisible(true);
     }
@@ -306,7 +308,8 @@ public class Gui extends Main implements ActionListener {
                             + "\nthe password and salt can be reused to decript something imidialy"
                             + "\nso the salt stay in cach as long as the app is open "
                             + "\nselecthing for the file to be delted after usage deltes the File after is was used this is not a safe delete So"
-                            + "\nthere is the possibilty for the File to be recoverd after deletion",
+                            + "\nthere is the possibilty for the File to be recoverd after deletion"
+                            + "\nif Image mode is activ the program trys to export the file as an image(does not incluide renaming)",
                     "Help",
                     JOptionPane.PLAIN_MESSAGE);
         
@@ -332,6 +335,11 @@ public class Gui extends Main implements ActionListener {
 
             //decryption
         }
+        /**
+         * TODO 
+         * add image support 
+         * 
+         */
         if (e.getSource() == decryptButton) {
             char[] password = (pswField.getText()).toCharArray();//converts the thing into a Char array
             String tempdir = workingdir+ "/" + FileName.replace(".enc", "");
@@ -348,9 +356,10 @@ public class Gui extends Main implements ActionListener {
             } else {
                 tempiv = StringToByteArray(ivField.getText());
             }
+            boolean imgB = imageex.isSelected();
             //actual encription
             try {
-                DecriptionFiles(password, path, tempdir, statusL, tempsalt, tempiv);
+                DecriptionFiles(password, path, tempdir, statusL, tempsalt, tempiv, imgB);
             //file deletion 
             //the actual File 
             if(deleteFile.isSelected() == true){
