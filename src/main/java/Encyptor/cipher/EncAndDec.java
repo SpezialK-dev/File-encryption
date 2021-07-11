@@ -72,8 +72,29 @@ IllegalBlockSizeException, BadPaddingException, InvalidKeySpecException, Invalid
     return out;
     }
     //decriptor
-
-public static void DecriptionFiles(char[] password, String fileInputPath, String fileOutPath, JLabel status,byte[] salt,byte[] iv) 
+/**
+ * TODO 
+ * add option for images so that it automaticly saves as the input parameter
+ */
+/**
+ * 
+ * @param password
+ * @param fileInputPath
+ * @param fileOutPath
+ * @param status
+ * @param salt
+ * @param iv
+ * @throws NoSuchAlgorithmException
+ * @throws NoSuchPaddingException
+ * @throws InvalidKeyException
+ * @throws FileNotFoundException
+ * @throws IOException
+ * @throws IllegalBlockSizeException
+ * @throws BadPaddingException
+ * @throws InvalidKeySpecException
+ * @throws InvalidAlgorithmParameterException 
+ */
+public static void DecriptionFiles(char[] password, String fileInputPath, String fileOutPath, JLabel status,byte[] salt,byte[] iv, boolean imgsup)
         throws NoSuchAlgorithmException, NoSuchPaddingException, InvalidKeyException, FileNotFoundException, IOException, IllegalBlockSizeException, BadPaddingException, InvalidKeySpecException, InvalidAlgorithmParameterException{
         
    //Converting a key
