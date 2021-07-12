@@ -2,7 +2,9 @@
 package Encyptor.cipher;
 
 import Encyptor.Gui;
+import java.awt.image.BufferedImage;
 import java.io.BufferedWriter;
+import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -26,6 +28,7 @@ import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.PBEKeySpec;
 import javax.crypto.spec.SecretKeySpec;
+import javax.imageio.ImageIO;
 import javax.swing.JLabel;
 
 public class EncAndDec extends Gui{
@@ -116,16 +119,22 @@ public static void DecriptionFiles(char[] password, String fileInputPath, String
 
     Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5Padding");
     cipher.init(Cipher.DECRYPT_MODE, secret, new IvParameterSpec(iv));
-    String plaintext = new String(cipher.doFinal(inputBytes), StandardCharsets.UTF_8);
-    
     status.setText("writing to new File");
-    //output stream
-    File outFile = new File(fileOutPath);
-    BufferedWriter outwriter = new BufferedWriter(new FileWriter(outFile));
-    outwriter.write(plaintext);
-    outwriter.close();
-    status.setText("finished");
-
+    if(imgsup == true){
+        BufferedImage outImg = ImageIO.read(new ByteArrayInputStream(cipher.doFinal(inputBytes)));
+        File outFile = new File(fileOutPath + ".png");
+        ImageIO.write(outImg,"png", outFile);
+        
+    }else{
+        // the rout for String(Text files)
+        String plaintext = new String(cipher.doFinal(inputBytes), StandardCharsets.UTF_8);
+        //output stream
+        File outFile = new File(fileOutPath);
+        BufferedWriter outwriter = new BufferedWriter(new FileWriter(outFile));
+        outwriter.write(plaintext);
+        outwriter.close();
+        status.setText("finished"); 
+    }
         
     }
 }
