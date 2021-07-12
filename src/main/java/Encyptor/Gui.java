@@ -309,7 +309,8 @@ public class Gui extends Main implements ActionListener {
                             + "\nso the salt stay in cach as long as the app is open "
                             + "\nselecthing for the file to be delted after usage deltes the File after is was used this is not a safe delete So"
                             + "\nthere is the possibilty for the File to be recoverd after deletion"
-                            + "\nif Image mode is activ the program trys to export the file as an image(does not incluide renaming)",
+                            + "\nif Image mode is activ the program trys to export the file as an image(does not incluide renaming)"
+                            + "\n the File type is png",
                     "Help",
                     JOptionPane.PLAIN_MESSAGE);
         
