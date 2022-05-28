@@ -7,12 +7,12 @@ You can use the tool by selecting  a file then pressing the encryption button. I
 
 ## Roadmap
 
-- [] update Gui to something better looking
-  - [] dark mode
+- [ ] update Gui to something better looking
+  - [ ] dark mode
   - custom color schemes
-- [] add more encryption methods
-  - []  make Plugin support
-- [] clean the backend Gui code 
+- [ ] add more encryption methods
+  - [ ]  make Plugin support
+- [ ] clean the backend Gui code 
 - [X] allow different character sets
 - [X] add support for more file types
     - [X] jpg
@@ -25,5 +25,5 @@ You can use the tool by selecting  a file then pressing the encryption button. I
     - [X] zip
     - [X] mov
     - [X] mkv
-- [] add threading for multiple files
-- [] decrypt multiple files
+- [ ] add threading for multiple files
+- [ ] decrypt multiple files
