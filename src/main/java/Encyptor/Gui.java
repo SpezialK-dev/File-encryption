@@ -4,6 +4,7 @@ package Encyptor;
 import static Encyptor.cipher.EncAndDec.*;
 import Encyptor.cipher.Output;
 
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
@@ -32,9 +33,7 @@ import javax.swing.*;
 
 
 public class Gui extends Main implements ActionListener {
-    // the list of all available export types
-    private final static String[] exportTypes ={"txt" , "png", "jpg"};
-    //all of the buttons the program will have
+    //all  the buttons the program will have
     private final JButton decryptButton = new JButton("Decrypt");
     private final JButton encryptButton = new JButton("Encrypt");
     private final JButton openFile = new JButton("Open file");
@@ -43,12 +42,13 @@ public class Gui extends Main implements ActionListener {
     private final JButton loadConfigButton = new JButton("Load config for decryption");
     private final JButton clearInfo = new JButton("Clear info");
     private final JButton saveConfig = new JButton("Save config");
+    private final JButton changeColor = new JButton("Dark Mode");
     
-    //all of the check boxes 
+    //all the checkboxes
     private final JCheckBox deleteConf  = new JCheckBox("Delete Config after usag",false);
     private final JCheckBox deleteFile = new JCheckBox("Delete File after usag", false);
 
-    // all of the status text like what file got chosen and shit like that
+    // all  the status text like what file got chosen and stuff like that
     //Encryption labels
     private final JLabel titleE = new JLabel("Encryption files");
     private final JLabel statusFL = new JLabel("No file selected");
@@ -67,6 +67,12 @@ public class Gui extends Main implements ActionListener {
     JPanel panel = new JPanel();
     JFrame frame = new JFrame();
 
+    //creates the UI manager so that I can have a dark mode
+    UIManager UI=new UIManager();
+
+    //the colors that are being used
+    Color background = Color.WHITE;
+    Color foreground = Color.BLACK;
 
     //other general Variables
     private String path;
@@ -97,118 +103,179 @@ public class Gui extends Main implements ActionListener {
         //panel settings
         panel.setLayout(null);
 
+        //Ui Manager stuff
+        UI.put("OptionPane.background", background);
+        UI.put("Panel.background", background);
+        UI.put("setForeground", foreground);
+
 
         //adding all of the buttons
         //open file buttoni just tend to get on the wrong side of tiktok
 
         openFile.setBounds(40, 170, 100, 25);
         openFile.addActionListener(this);
+        openFile.setBackground(background);
+        openFile.setForeground(foreground);
         panel.add(openFile);
 
         //decryption button
         decryptButton.setBounds(160, 170, 100, 25);
         decryptButton.addActionListener(this);
+        decryptButton.setBackground(background);
+        decryptButton.setForeground(foreground);
         panel.add(decryptButton);
 
         //encryption button
         encryptButton.setBounds(280, 170, 100, 25);
         encryptButton.addActionListener(this);
+        encryptButton.setBackground(background);
+        encryptButton.setForeground(foreground);
         panel.add(encryptButton);
 
         //info Button
         showAllINfo.setBounds(40, 130, 100, 25);
         showAllINfo.addActionListener(this);
+        showAllINfo.setBackground(background);
+        showAllINfo.setForeground(foreground);
         panel.add(showAllINfo);
 
         //help button
         help.setBounds(550, 170, 120, 25);
         help.addActionListener(this);
+        help.setBackground(background);
+        help.setForeground(foreground);
         panel.add(help);
 
         //load config button
         loadConfigButton.setBounds(160, 130, 220, 25);
         loadConfigButton.addActionListener(this);
+        loadConfigButton.setBackground(background);
+        loadConfigButton.setForeground(foreground);
         panel.add(loadConfigButton);
 
         //Salt clear button
         clearInfo.setBounds(550, 130, 120, 25);
         clearInfo.addActionListener(this);
+        clearInfo.setBackground(background);
+        clearInfo.setForeground(foreground);
         panel.add(clearInfo);
 
         //saves the config to your hard drive so you can send it to someone
         saveConfig.setBounds(550, 210, 120, 25);
         saveConfig.addActionListener(this);
+        saveConfig.setBackground(background);
+        saveConfig.setForeground(foreground);
         panel.add(saveConfig);
+
+        //Color button
+        changeColor.setBounds(430, 50,200,25);
+        changeColor.addActionListener(this);
+        changeColor.setBackground(background);
+        changeColor.setForeground(foreground);
+        panel.add(changeColor);
 
         
         //adding the text field to enter in the key
         pswField.setBounds(130, 210, 300, 25);
+        pswField.setBackground(background);
+        pswField.setForeground(foreground);
         panel.add(pswField);
 
         //key field for the salt will need more stuff backend but this is just a non-working intehration so that there is something there and not just something empty
         saltField.setBounds(130, 270, 300, 25);
+        saltField.setBackground(background);
+        saltField.setForeground(foreground);
         panel.add(saltField);
         
         //Iv Field so that you can enter is manually
         ivField.setBounds(130,240,300,25);
+        ivField.setBackground(background);
+        ivField.setForeground(foreground);
         panel.add(ivField);
 
         
         //adding text
         //just what file you have selected
         statusFL.setBounds(20, 50, 600, 25);
+        statusFL.setBackground(background);
+        statusFL.setForeground(foreground);
         panel.add(statusFL);
+
         statusFNameL.setBounds(20, 70, 380, 25);
+        statusFNameL.setBackground(background);
+        statusFNameL.setForeground(foreground);
         panel.add(statusFNameL);
 
         //the status of if encryption is finished and shit
         statusL.setBounds(20, 90, 200, 25);
+        statusL.setBackground(background);
+        statusL.setForeground(foreground);
         panel.add(statusL);
 
         //adding the text for the key field
         txtF.setBounds(20, 210, 40, 25);
+        txtF.setBackground(background);
+        txtF.setForeground(foreground);
         panel.add(txtF);
 
         //add the decryption text field
         //the label for th decryption Salt
         saltL1.setBounds(20, 270, 120, 25);
+        saltL1.setBackground(background);
+        saltL1.setForeground(foreground);
         panel.add(saltL1);
 
         //adding all the titles
         //encryption
         titleE.setBounds(20, 20, 600, 25);
+        titleE.setBackground(background);
+        titleE.setForeground(foreground);
         panel.add(titleE);
 
         //decryption title
         titleD.setBounds(20, 300, 300, 25);
+        titleD.setBackground(background);
+        titleD.setForeground(foreground);
         panel.add(titleD);
 
         //adding everything for decryption
         //file path
         decryptFile.setBounds(20, 330, 600, 25);
+        decryptFile.setBackground(background);
+        decryptFile.setForeground(foreground);
         panel.add(decryptFile);
 
         //file name
         decryptFileName.setBounds(20, 360, 600, 25);
+        decryptFileName.setBackground(background);
+        decryptFileName.setForeground(foreground);
         panel.add(decryptFileName);
         //the title for the decryption
         
         //decription IV 
         IVL1.setBounds(20,240,200,25);
+        IVL1.setBackground(background);
+        IVL1.setForeground(foreground);
         panel.add(IVL1);
         
         //Check boxes
         // adding the first checkmark
         deleteConf.setBounds(230, 90,200,25);
         deleteConf.addActionListener(this);
+        deleteConf.setBackground(background);
+        deleteConf .setForeground(foreground);
         panel.add(deleteConf);
         //add the second chechmark
         deleteFile.setBounds(430, 90,200,25);
         deleteFile.addActionListener(this);
+        deleteFile.setBackground(background);
+        deleteFile.setForeground(foreground);
         panel.add(deleteFile);
 
 
-        
+
+        panel.setBackground(background);
+
         frame.setVisible(true);
     }
 
@@ -301,9 +368,7 @@ public class Gui extends Main implements ActionListener {
                             + "\nthe password and salt can be reused to decript something imidialy"
                             + "\nso the salt stay in cach as long as the app is open "
                             + "\nselecthing for the file to be delted after usage deltes the File after is was used this is not a safe delete So"
-                            + "\nthere is the possibilty for the File to be recoverd after deletion"
-                            + "\nif Image mode is activ the program trys to export the file as an image(does not incluide renaming)"
-                            + "\n the File type is png",
+                            + "\nthere is the possibilty for the File to be recoverd after deletion",
                     "Help",
                     JOptionPane.PLAIN_MESSAGE);
         
@@ -383,6 +448,21 @@ public class Gui extends Main implements ActionListener {
                 StringWriter(outSt, outFilePath());
             } catch (IOException ex) {
                 Logger.getLogger(Gui.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        if(e.getSource() == changeColor){
+            //todo make it so that this actually updates the Gui since this does not change to color
+            String currentTheme=changeColor.getText();
+            if(currentTheme == "Dark Mode"){
+                changeColor.setText("Light Mode");
+                background = Color.BLACK;
+                foreground = Color.WHITE;
+                panel.revalidate();
+            }else{
+                changeColor.setText("Dark Mode");
+                background = Color.WHITE;
+                foreground = Color.BLACK;
+                panel.paintAll();
             }
         }
     }

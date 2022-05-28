@@ -8,8 +8,9 @@ You can use the tool by selecting  a file then pressing the encryption button. I
 ## Roadmap
 
 - [ ] update Gui to something better looking
-  - [ ] dark mode
-  - custom color schemes
+  - [X] dark mode
+  - [ ] custom color schemes
+  - [ ] fix black color scheme in pop ups
 - [ ] add more encryption methods
   - [ ]  make Plugin support
 - [ ] clean the backend Gui code 
@@ -27,3 +28,4 @@ You can use the tool by selecting  a file then pressing the encryption button. I
     - [X] mkv
 - [ ] add threading for multiple files
 - [ ] decrypt multiple files
+- [ ] add native File chooser so that it looks better
