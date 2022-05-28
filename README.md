@@ -13,14 +13,15 @@ You can use the tool by selecting  a file then pressing the encryption button. I
 - [] add more encryption methods
   - []  make Plugin support
 - [] clean the backend Gui code 
-- [] allow different charackter sets
+- [X] allow different character sets
 - [] add support for more file types
     - [] jpg
+    - [] png
+    - [] text
     - [] webp
     - [] gif
     - [] mp4
     - [] webm
     - [] zip
-- [] add support for choosing more file options
 - [] add threading for multiple files
 - [] decrypt multiple files

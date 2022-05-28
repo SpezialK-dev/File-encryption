@@ -32,6 +32,8 @@ import javax.swing.*;
 
 
 public class Gui extends Main implements ActionListener {
+    // the list of all available export types
+    private final static String[] exportTypes ={"txt" , "png", "jpg"};
     //all of the buttons the program will have
     private final JButton decryptButton = new JButton("Decrypt");
     private final JButton encryptButton = new JButton("Encrypt");
@@ -45,8 +47,6 @@ public class Gui extends Main implements ActionListener {
     //all of the check boxes 
     private final JCheckBox deleteConf  = new JCheckBox("Delete Config after usag",false);
     private final JCheckBox deleteFile = new JCheckBox("Delete File after usag", false);
-    //the check box for images
-    private final JCheckBox imageex = new JCheckBox("export as image");
 
     // all of the status text like what file got chosen and shit like that
     //Encryption labels
@@ -145,7 +145,7 @@ public class Gui extends Main implements ActionListener {
         pswField.setBounds(130, 210, 300, 25);
         panel.add(pswField);
 
-        //key field for the salt will need more stuff backend but this is just a non working intehration so that there is something there and not just somethign empty
+        //key field for the salt will need more stuff backend but this is just a non-working intehration so that there is something there and not just something empty
         saltField.setBounds(130, 270, 300, 25);
         panel.add(saltField);
         
@@ -206,10 +206,8 @@ public class Gui extends Main implements ActionListener {
         deleteFile.setBounds(430, 90,200,25);
         deleteFile.addActionListener(this);
         panel.add(deleteFile);
-        //the second check box
-        imageex.setBounds(390,170,150,25);
-        imageex.addActionListener(this);
-        panel.add(imageex);
+
+
         
         frame.setVisible(true);
     }
@@ -277,23 +275,18 @@ public class Gui extends Main implements ActionListener {
             }
             
         }
-        /**
-         * TODO 
-         * remove the bracktes from the text (this should be done in the encription class by converting it to string beforehand and then removing all of the brackets)
-         */
         if (e.getSource() == showAllINfo) {
             JOptionPane.showMessageDialog(frame,
                     "All information"
                             + "\nSalt : " + saltField.getText()
                             + "\nCurrent Password : " + pswField.getText()
                             + "\nCurrent Starting paramenter : " + ivField.getText()
-                            + "\nCharater set Used: UTF 8"
                             + "\n"
                             + "\n",
                     "Information",
                     JOptionPane.PLAIN_MESSAGE);
         }
-        //the help menue
+        //the help menu
         if (e.getSource() == help) {
             JOptionPane.showMessageDialog(frame,
                     "this is an help menue"
@@ -314,7 +307,7 @@ public class Gui extends Main implements ActionListener {
                     "Help",
                     JOptionPane.PLAIN_MESSAGE);
         
-//load the file for decryption and also sets all of the files
+//load the file for decryption and also sets all the files
         }//this loads a config 
         if (e.getSource() == loadConfigButton) {
             String outputFileRead = "";
@@ -336,11 +329,6 @@ public class Gui extends Main implements ActionListener {
 
             //decryption
         }
-        /**
-         * TODO 
-         * add image support 
-         * 
-         */
         if (e.getSource() == decryptButton) {
             char[] password = (pswField.getText()).toCharArray();//converts the thing into a Char array
             String tempdir = workingdir+ "/" + FileName.replace(".enc", "");
@@ -357,14 +345,14 @@ public class Gui extends Main implements ActionListener {
             } else {
                 tempiv = StringToByteArray(ivField.getText());
             }
-            boolean imgB = imageex.isSelected();
-            //actual encription
+
+            //actual decryption
             try {
-                DecriptionFiles(password, path, tempdir, statusL, tempsalt, tempiv, imgB);
+                DecriptionFiles(password, path, tempdir, statusL, tempsalt, tempiv);
             //file deletion 
             //the actual File 
             if(deleteFile.isSelected() == true){
-                System.out.println("delteing the original File: "+ path);
+                System.out.println("deleting the original File: "+ path);
                 deleteFile(path);
             }
             //the config
@@ -377,18 +365,18 @@ public class Gui extends Main implements ActionListener {
                 JOptionPane.showMessageDialog(frame, "Something went wrong during runtime\nplease check the Application logs", "Error", JOptionPane.PLAIN_MESSAGE);
                 statusL.setText("Error");
             }
-            //clears out all of the info that is saved
+            //clears out all the info that is saved
         }
         if (e.getSource() == clearInfo) {
             
             //this is just temporary will be replaced with the keyfields
             curSalt = null;
             curIV = null;
-            //clearing all of the keyfields
+            //clearing all the keyfields
             saltField.setText("");
             ivField.setText("");
             pswField.setText("password");            
-        }//saves all of the info toa file
+        }//saves all of the info to a file
         if (e.getSource() == saveConfig) {
             String outSt = creatingOutputString();
             try {
@@ -432,7 +420,7 @@ public class Gui extends Main implements ActionListener {
         outWriter.write(input);
         outWriter.close();
     }
-    //gives out the path for the file also generates the random name that is gonna be used
+    //gives out the path for the file also generates the random name that is going to be used
     public String outFilePath() {
         Random rand = new Random();
         int n = rand.nextInt(100000);
@@ -453,7 +441,7 @@ public class Gui extends Main implements ActionListener {
         //setting the password
         pswField.setText(split1[0]);
         //converting these things to arrays and setting them appropriately
-        //so we remove all of the brackets befoqre we open this so I can reuse the other part
+        //so we remove all the brackets before we open this I can reuse the other part
         
         String thissalt =  split1[1].replaceAll(Pattern.quote("]"),"");
         thissalt =  thissalt.replaceAll(Pattern.quote("["),"");
@@ -483,13 +471,13 @@ public class Gui extends Main implements ActionListener {
 
         return bytes;
     }
-    //all of the File deletion 
+    //the File deletion
     public void deleteFile(String Filepath){
         File toDel = new File(Filepath);
         if (toDel.delete()){
-            System.out.println("succes with deletion ");
+            System.out.println("success with deletion ");
         }else{
-            System.out.println("Failed to delte the File");
+            System.out.println("Failed to delete the File");
             JOptionPane.showMessageDialog(frame,
                     "There was a fatal flaw",
                     "Error",

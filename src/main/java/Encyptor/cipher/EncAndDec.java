@@ -2,16 +2,12 @@
 package Encyptor.cipher;
 
 import Encyptor.Gui;
-import java.awt.image.BufferedImage;
-import java.io.BufferedWriter;
-import java.io.ByteArrayInputStream;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
-import java.io.FileWriter;
 import java.io.IOException;
-import java.nio.charset.StandardCharsets;
 import java.security.AlgorithmParameters;
 import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
@@ -28,13 +24,12 @@ import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.PBEKeySpec;
 import javax.crypto.spec.SecretKeySpec;
-import javax.imageio.ImageIO;
 import javax.swing.JLabel;
 
 public class EncAndDec extends Gui{
     public EncAndDec(){
     }
-    //encriptor
+    //encryptor
 
 public static Output encryptedFile(char[] password, String fileInputPath, String fileOutPath, JLabel status,byte[] salt)
 throws NoSuchAlgorithmException, NoSuchPaddingException, InvalidKeyException, IOException,
@@ -55,7 +50,7 @@ IllegalBlockSizeException, BadPaddingException, InvalidKeySpecException, Invalid
     inputStream.read(inputBytes);
     inputStream.close();
     
-    //encripting
+    //encrypting
     status.setText("encyping");
     Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5Padding");
     cipher.init(Cipher.ENCRYPT_MODE, secret);
@@ -80,13 +75,13 @@ IllegalBlockSizeException, BadPaddingException, InvalidKeySpecException, Invalid
  * add option for images so that it automaticly saves as the input parameter
  */
 /**
- * 
  * @param password
  * @param fileInputPath
  * @param fileOutPath
  * @param status
  * @param salt
  * @param iv
+ * @return
  * @throws NoSuchAlgorithmException
  * @throws NoSuchPaddingException
  * @throws InvalidKeyException
@@ -95,18 +90,18 @@ IllegalBlockSizeException, BadPaddingException, InvalidKeySpecException, Invalid
  * @throws IllegalBlockSizeException
  * @throws BadPaddingException
  * @throws InvalidKeySpecException
- * @throws InvalidAlgorithmParameterException 
+ * @throws InvalidAlgorithmParameterException
  */
-public static void DecriptionFiles(char[] password, String fileInputPath, String fileOutPath, JLabel status,byte[] salt,byte[] iv, boolean imgsup)
+public static void DecriptionFiles(char[] password, String fileInputPath, String fileOutPath, JLabel status, byte[] salt, byte[] iv)
         throws NoSuchAlgorithmException, NoSuchPaddingException, InvalidKeyException, FileNotFoundException, IOException, IllegalBlockSizeException, BadPaddingException, InvalidKeySpecException, InvalidAlgorithmParameterException{
-        
+
    //Converting a key
     SecretKeyFactory factory = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA256");
     KeySpec spec = new PBEKeySpec(password, salt, 65536, 256);//uses 65536 rounds and 256 bit encryption
     SecretKey tmp = factory.generateSecret(spec);
     SecretKey secret = new SecretKeySpec(tmp.getEncoded(), "AES");//uses AES
-    
-    
+
+
     status.setText("reading File");
     //reads the input of the file as an array
     File fileInput = new File(fileInputPath);
@@ -114,27 +109,18 @@ public static void DecriptionFiles(char[] password, String fileInputPath, String
     byte[] inputBytes = new byte[(int) fileInput.length()];
     inputStream.read(inputBytes);
     inputStream.close();
-    
+
     status.setText("decripting");
 
     Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5Padding");
     cipher.init(Cipher.DECRYPT_MODE, secret, new IvParameterSpec(iv));
+
     status.setText("writing to new File");
-    if(imgsup == true){
-        BufferedImage outImg = ImageIO.read(new ByteArrayInputStream(cipher.doFinal(inputBytes)));
-        File outFile = new File(fileOutPath + ".png");
-        ImageIO.write(outImg,"png", outFile);
-        
-    }else{
-        // the rout for String(Text files)
-        String plaintext = new String(cipher.doFinal(inputBytes), StandardCharsets.UTF_8);
-        //output stream
-        File outFile = new File(fileOutPath);
-        BufferedWriter outwriter = new BufferedWriter(new FileWriter(outFile));
-        outwriter.write(plaintext);
-        outwriter.close();
-        status.setText("finished"); 
-    }
-        
+    File fileEncryptOut = new File(fileOutPath);
+    FileOutputStream outputStream = new FileOutputStream(fileEncryptOut);
+    outputStream.write(cipher.doFinal(inputBytes));
+    outputStream.close();
+    status.setText("finished");
+
     }
 }
