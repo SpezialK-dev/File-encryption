@@ -7,7 +7,7 @@ You can use the tool by selecting  a file then pressing the encryption button. I
 
 ## Roadmap
 
-- [ ] update Gui to something better looking
+- [X] update Gui to something better looking
   - [X] dark mode
   - [ ] custom color schemes
   - [ ] fix black color scheme in pop ups
