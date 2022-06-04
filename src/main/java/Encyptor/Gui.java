@@ -87,6 +87,8 @@ public class Gui extends Main implements ActionListener {
     private String ConfigFilePath;
     private String ChoosenFilePath;
 
+
+    private Color dark = Color.decode("#120F10");
     //text fields
     JTextField pswField = new JTextField("password", 30);//replace "Password with a randomly generated password(using somethign like salt gen or somethign else wich is strong and not really reversable)"
     JTextField saltField = new JTextField(500);
@@ -109,8 +111,7 @@ public class Gui extends Main implements ActionListener {
         UI.put("setForeground", foreground);
 
 
-        //adding all of the buttons
-        //open file buttoni just tend to get on the wrong side of tiktok
+        //adding all  the buttons
 
         openFile.setBounds(40, 170, 100, 25);
         openFile.addActionListener(this);
@@ -455,15 +456,88 @@ public class Gui extends Main implements ActionListener {
             String currentTheme=changeColor.getText();
             if(currentTheme == "Dark Mode"){
                 changeColor.setText("Light Mode");
-                background = Color.BLACK;
+                background = dark;
                 foreground = Color.WHITE;
-                panel.revalidate();
             }else{
                 changeColor.setText("Dark Mode");
                 background = Color.WHITE;
-                foreground = Color.BLACK;
-                panel.paintAll();
+                foreground = dark;
+                //test if I just update the background manually if it will work
             }
+            //I need to reapply all the colors for some reason
+            //I am well aware that this is not the best way of handling this
+            panel.setBackground(background);
+            panel.setForeground(foreground);
+
+            encryptButton.setBackground(background);
+            encryptButton.setForeground(foreground);
+
+            decryptButton.setBackground(background);
+            decryptButton.setForeground(foreground);
+
+            openFile.setBackground(background);
+            openFile.setForeground(foreground);
+
+            help.setBackground(background);
+            help.setForeground(foreground);
+
+            showAllINfo.setBackground(background);
+            showAllINfo.setForeground(foreground);
+
+            loadConfigButton.setBackground(background);
+            loadConfigButton.setForeground(foreground);
+
+            clearInfo.setBackground(background);
+            clearInfo.setForeground(foreground);
+
+            saveConfig.setBackground(background);
+            saveConfig.setForeground(foreground);
+
+            changeColor.setBackground(background);
+            changeColor.setForeground(foreground);
+
+            deleteConf.setBackground(background);
+            deleteConf.setForeground(foreground);
+
+            deleteFile.setBackground(background);
+            deleteFile.setForeground(foreground);
+
+            titleE.setBackground(background);
+            titleE.setForeground(foreground);
+
+            statusL.setBackground(background);
+            statusL.setForeground(foreground);
+
+            statusFL.setBackground(background);
+            statusFL.setForeground(foreground);
+
+            statusFNameL.setBackground(background);
+            statusFNameL.setForeground(foreground);
+
+            txtF.setBackground(background);
+            txtF.setForeground(foreground);
+
+            decryptFileName.setBackground(background);
+            decryptFileName.setForeground(foreground);
+
+            saltL1.setBackground(background);
+            saltL1.setForeground(foreground);
+
+            titleD.setBackground(background);
+            titleD.setForeground(foreground);
+
+            IVL1.setBackground(background);
+            IVL1.setForeground(foreground);
+
+            decryptFile.setBackground(background);
+            decryptFile.setForeground(foreground);
+
+            statusFL.setBackground(background);
+            statusFL.setBackground(foreground);
+
+            UI.put("OptionPane.background", background);
+            UI.put("Panel.background", background);
+            UI.put("setForeground", foreground);
         }
     }
 
