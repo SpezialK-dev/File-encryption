@@ -43,7 +43,8 @@ public class Gui extends Main implements ActionListener {
     private final JButton clearInfo = new JButton("Clear info");
     private final JButton saveConfig = new JButton("Save config");
     private final JButton changeColor = new JButton("Dark Mode");
-    
+
+    private final JButton settingsButton = new JButton("Settings");
     //all the checkboxes
     private final JCheckBox deleteConf  = new JCheckBox("Delete Config after usag",false);
     private final JCheckBox deleteFile = new JCheckBox("Delete File after usag", false);
@@ -61,6 +62,13 @@ public class Gui extends Main implements ActionListener {
     private final JLabel saltL1 = new JLabel("Decryption Salt: ");
     private final JLabel titleD = new JLabel("Decryption Files:");
     private final JLabel IVL1 = new JLabel("Decryption IV: ");
+
+
+    // The settings Menue Items
+    private final  JButton closeMenueM = new JButton("Close");
+
+
+
 
 
     //creates the panel and Frame
@@ -90,14 +98,14 @@ public class Gui extends Main implements ActionListener {
 
     private Color dark = Color.decode("#120F10");
     //text fields
-    JTextField pswField = new JTextField("password", 30);//replace "Password with a randomly generated password(using somethign like salt gen or somethign else wich is strong and not really reversable)"
+    JTextField pswField = new JTextField("password", 30);//todo replace "Password with a randomly generated password(using somethign like salt gen or somethign else wich is strong and not really reversable)"
     JTextField saltField = new JTextField(500);
     JTextField ivField = new JTextField(500);
 
     public Gui() {
 
         //general frame settings
-        frame.setSize(700, 420);//values 500,270
+        frame.setSize(700, 420);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.add(panel);
         frame.setTitle("File-encryption");
@@ -111,121 +119,92 @@ public class Gui extends Main implements ActionListener {
 
         openFile.setBounds(40, 170, 100, 25);
         openFile.addActionListener(this);
-        panel.add(openFile);
 
         //decryption button
         decryptButton.setBounds(160, 170, 100, 25);
         decryptButton.addActionListener(this);
-        panel.add(decryptButton);
 
         //encryption button
         encryptButton.setBounds(280, 170, 100, 25);
         encryptButton.addActionListener(this);
-        panel.add(encryptButton);
 
         //info Button
         showAllINfo.setBounds(40, 130, 100, 25);
         showAllINfo.addActionListener(this);
-        panel.add(showAllINfo);
 
         //help button
         help.setBounds(550, 170, 120, 25);
         help.addActionListener(this);
-        panel.add(help);
 
         //load config button
         loadConfigButton.setBounds(160, 130, 220, 25);
         loadConfigButton.addActionListener(this);
-        panel.add(loadConfigButton);
 
         //Salt clear button
         clearInfo.setBounds(550, 130, 120, 25);
         clearInfo.addActionListener(this);
-        panel.add(clearInfo);
 
         //saves the config to your hard drive so you can send it to someone
         saveConfig.setBounds(550, 210, 120, 25);
         saveConfig.addActionListener(this);
-        panel.add(saveConfig);
 
         //Color button
         changeColor.setBounds(430, 50,200,25);
         changeColor.addActionListener(this);
-        panel.add(changeColor);
 
-        
+        settingsButton.setBounds( 430, 20, 200, 25);
+        settingsButton.addActionListener(this);
+
         //adding the text field to enter in the key
         pswField.setBounds(130, 210, 300, 25);
-        panel.add(pswField);
 
         //key field for the salt will need more stuff backend but this is just a non-working intehration so that there is something there and not just something empty
         saltField.setBounds(130, 270, 300, 25);
-        panel.add(saltField);
-        
+
         //Iv Field so that you can enter is manually
         ivField.setBounds(130,240,300,25);
-        panel.add(ivField);
 
         
         //adding text
         //just what file you have selected
         statusFL.setBounds(20, 50, 600, 25);
-        panel.add(statusFL);
 
         statusFNameL.setBounds(20, 70, 380, 25);
-        panel.add(statusFNameL);
 
         //the status of if encryption is finished and shit
         statusL.setBounds(20, 90, 200, 25);
-        panel.add(statusL);
 
         //adding the text for the key field
         txtF.setBounds(20, 210, 40, 25);
-        panel.add(txtF);
 
         //add the decryption text field
         //the label for th decryption Salt
         saltL1.setBounds(20, 270, 120, 25);
-        panel.add(saltL1);
 
         //adding all the titles
         //encryption
         titleE.setBounds(20, 20, 600, 25);
-        panel.add(titleE);
 
         //decryption title
         titleD.setBounds(20, 300, 300, 25);
-        panel.add(titleD);
 
         //adding everything for decryption
         //file path
         decryptFile.setBounds(20, 330, 600, 25);
-        panel.add(decryptFile);
 
         //file name
         decryptFileName.setBounds(20, 360, 600, 25);
-        panel.add(decryptFileName);
         //the title for the decryption
         
         //decription IV 
         IVL1.setBounds(20,240,200,25);
-        panel.add(IVL1);
-        
-        //Check boxes
-        // adding the first checkmark
-        deleteConf.setBounds(230, 90,200,25);
-        deleteConf.addActionListener(this);
-        panel.add(deleteConf);
-        //add the second chechmark
-        deleteFile.setBounds(430, 90,200,25);
-        deleteFile.addActionListener(this);
-        panel.add(deleteFile);
 
 
-
+        addDefaultPanelItems();
         panel.setBackground(background);
 
         frame.setVisible(true);
+
     }
 
     @Override
@@ -414,6 +393,15 @@ public class Gui extends Main implements ActionListener {
             }
             repaintWindow();
         }
+        if(e.getSource() == settingsButton){
+            //this removes all the old components and then adds new ones that are there for the Menu
+            removeDefaultPanelItems();
+            menuePanelComp();
+        }
+        if(e.getSource() == closeMenueM){
+            removeSettingsMenu();
+            addDefaultPanelItems();
+        }
     }
 
     // generates a random salt using the system native RNG (this can lead to different generations depending on system and what is used)
@@ -583,8 +571,99 @@ public class Gui extends Main implements ActionListener {
         statusFL.setBackground(background);
         statusFL.setBackground(foreground);
 
+        settingsButton.setBackground(background);
+        settingsButton.setForeground(foreground);
+
+        closeMenueM.setBackground(background);
+        closeMenueM.setForeground(foreground);
+
+
         UI.put("OptionPane.background", background);
+        UI.put("OptionPane.font", foreground);
+        UI.put("PopupMenu.font", foreground);
         UI.put("Panel.background", background);
         UI.put("setForeground", foreground);
     }
+    //this should remove add all of the default items to the panel
+    private void addDefaultPanelItems(){
+        panel.add(IVL1);
+        panel.add(decryptFileName);
+        panel.add(decryptFile);
+        panel.add(titleD);
+        panel.add(titleE);
+        panel.add(statusFL);
+        panel.add(saltL1);
+        panel.add(txtF);
+        panel.add(statusL);
+        panel.add(statusFNameL);
+        panel.add(ivField);
+        panel.add(saltField);
+        panel.add(pswField);
+        panel.add(changeColor);
+        panel.add(saveConfig);
+        panel.add(clearInfo);
+        panel.add(loadConfigButton);
+        panel.add(help);
+        panel.add(showAllINfo);
+        panel.add(encryptButton);
+        panel.add(decryptButton);
+        panel.add(openFile);
+        panel.add(settingsButton);
+        //there to refresh the panel
+        panel.repaint();
+    }
+    //this removes all the default components
+    private void removeDefaultPanelItems(){
+        panel.remove(IVL1);
+        panel.remove(decryptFileName);
+        panel.remove(decryptFile);
+        panel.remove(titleD);
+        panel.remove(titleE);
+        panel.remove(statusFL);
+        panel.remove(saltL1);
+        panel.remove(txtF);
+        panel.remove(statusL);
+        panel.remove(statusFNameL);
+        panel.remove(ivField);
+        panel.remove(saltField);
+        panel.remove(pswField);
+        panel.remove(changeColor);
+        panel.remove(saveConfig);
+        panel.remove(clearInfo);
+        panel.remove(loadConfigButton);
+        panel.remove(help);
+        panel.remove(showAllINfo);
+        panel.remove(encryptButton);
+        panel.remove(decryptButton);
+        panel.remove(openFile);
+        panel.remove(settingsButton);
+
+        //there to refresh the panel
+        panel.repaint();
+    }
+    //this defines and add all the components for the settings menu
+    private void menuePanelComp(){
+        closeMenueM.setBounds(300,350,100,25);
+        closeMenueM.addActionListener(this);
+        panel.add(closeMenueM);
+
+        // adding the first checkmark
+        deleteConf.setBounds(20, 20,200,25);
+        deleteConf.addActionListener(this);
+        panel.add(deleteConf);
+        //add the second checkmark
+        deleteFile.setBounds(20, 50,200,25);
+        deleteFile.addActionListener(this);
+        panel.add(deleteFile);
+
+        panel.repaint();
+    }
+    private void removeSettingsMenu(){
+        panel.remove(closeMenueM);
+        panel.remove(deleteConf);
+        panel.remove(deleteFile);
+        panel.repaint();
+    }
+
+
 }

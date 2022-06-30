@@ -13,7 +13,7 @@ You can use the tool by selecting  a file then pressing the encryption button. I
   - [ ] fix black color scheme in pop ups
 - [ ] add more encryption methods
   - [ ]  make Plugin support
-- [ ] clean the backend Gui code 
+- [X] clean the backend Gui code 
 - [X] allow different character sets
 - [X] add support for more file types
     - [X] jpg
