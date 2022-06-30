@@ -29,3 +29,4 @@ You can use the tool by selecting  a file then pressing the encryption button. I
 - [ ] add threading for multiple files
 - [ ] decrypt multiple files
 - [ ] add native File chooser so that it looks better
+- [ ] make memory footprint smaller
