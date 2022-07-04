@@ -1,7 +1,7 @@
 
 package Encyptor.cipher;
 
-import Encyptor.Gui;
+import Encyptor.GuiOld;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -26,7 +26,7 @@ import javax.crypto.spec.PBEKeySpec;
 import javax.crypto.spec.SecretKeySpec;
 import javax.swing.JLabel;
 
-public class EncAndDec extends Gui{
+public class EncAndDec extends GuiOld {
     public EncAndDec(){
     }
     //encryptor

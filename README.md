@@ -30,3 +30,8 @@ You can use the tool by selecting  a file then pressing the encryption button. I
 - [ ] decrypt multiple files
 - [ ] add native File chooser so that it looks better
 - [ ] make memory footprint smaller
+- [ ] switch Gui frontend to https://github.com/SpaiR/imgui-java
+
+### dependencies
+
+- https://github.com/SpaiR/imgui-java
