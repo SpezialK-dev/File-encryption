@@ -63,7 +63,7 @@ public class GuiOld extends Main implements ActionListener {
     private final JLabel IVL1 = new JLabel("Decryption IV: ");
 
 
-    // The settings Menue Items
+    // The settings Menu Items
     private final  JButton closeMenueM = new JButton("Close");
 
 
@@ -154,7 +154,7 @@ public class GuiOld extends Main implements ActionListener {
         settingsButton.setBounds( 430, 20, 200, 25);
         settingsButton.addActionListener(this);
 
-        //adding the text field to enter in the key
+        //adding the text field to enter the key
         pswField.setBounds(130, 210, 300, 25);
 
         //key field for the salt will need more stuff backend but this is just a non-working intehration so that there is something there and not just something empty
@@ -208,12 +208,12 @@ public class GuiOld extends Main implements ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        //this open the target File we want to use to eather dec or enc
+        //this open the target File we want to use to either dec or enc
         if (e.getSource() == openFile) {
             JFileChooser chooser = new JFileChooser();
             int returnVal = chooser.showOpenDialog(panel);
             if (returnVal == JFileChooser.APPROVE_OPTION) {
-                //setting all of the statuses and giving out the path for everything
+                //setting all the statuses and giving out the path for everything
                 statusFL.setText("File Path: " + chooser.getSelectedFile().getPath());
                 ChoosenFilePath = chooser.getSelectedFile().getPath();
                 statusFNameL.setText("File Name: " + chooser.getSelectedFile().getName());
@@ -229,9 +229,9 @@ public class GuiOld extends Main implements ActionListener {
                 JOptionPane.showMessageDialog(frame, "something was missing and it could not encrypt", "Error", JOptionPane.PLAIN_MESSAGE);
             } else {// there is stuff there and then try that
                 char[] password = (pswField.getText()).toCharArray(); //converts the thing into a Char array
-                String tempdir = workingdir+ "/"+ FileName + ".enc";//the path to wich we encript to 
+                String tempdir = workingdir+ "/"+ FileName + ".enc";//the path to which we encrypt to
                 try {
-                    //because the shit might fabyte[] iv = params.getParameterSpec(IvParameterSpec.class).getIV();il so there is a try statement
+                    //because might fabyte[] iv = params.getParameterSpec(IvParameterSpec.class).getIV();il so there is a try statement
                     //returns a new type that has the salt and IV stored
                     out = encryptedFile(password, path, tempdir, statusL, saltGen()); //actually encrypts the thing and creates a new file with this
                     //converting the output into their own arrays
@@ -255,7 +255,7 @@ public class GuiOld extends Main implements ActionListener {
                     temporarysalt = null;
                     out = null;
                     //file deletion 
-                    //deleting the actuall file
+                    //deleting the actual file
                     if(deleteFile.isSelected() == true){
                         System.out.println("File was delted at: "+ path);
                         deleteFile(path);
