@@ -45,8 +45,8 @@ public class GuiOld extends Main implements ActionListener {
 
     private final JButton settingsButton = new JButton("Settings");
     //all the checkboxes
-    private final JCheckBox deleteConf  = new JCheckBox("Delete Config after usag",false);
-    private final JCheckBox deleteFile = new JCheckBox("Delete File after usag", false);
+    private final JCheckBox deleteConf  = new JCheckBox("Delete Config after usage",false);
+    private final JCheckBox deleteFile = new JCheckBox("Delete File after usage", false);
 
     // all  the status text like what file got chosen and stuff like that
     //Encryption labels
