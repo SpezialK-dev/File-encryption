@@ -1,11 +1,10 @@
 package Encyptor;
 
-import Encyptor.FileSelector.*;
+import imgui.flag.ImGuiInputTextFlags;
 import imgui.flag.ImGuiWindowFlags;
 import imgui.type.ImBoolean;
 import imgui.type.ImString;
 import imgui.ImGui;
-import imgui.ImGui.*;
 import imgui.app.Application;
 import imgui.app.Configuration;
 
@@ -17,14 +16,15 @@ public class Gui extends Application{
     //all the Variables for settings
     //this might be really useless
     ImGui gui = new ImGui();
+    FileSelector f = new FileSelector();
     //this is the window for all the encryption stuff
 
     //settingsMenu Variables
-    Boolean deleteConfAfterUsage = false;
-    Boolean deleteFileAfterusage = false;
+    boolean deleteConfAfterUsage = false;
+    boolean deleteFileAfterusage = false;
 
     //EncryptionWindow Variables
-
+    boolean fileOpenerHasbeenOpenENC = false;
     ImString encPswdWindow = new ImString("",256);
 
     //decryptionWindow Variables
@@ -41,18 +41,19 @@ public class Gui extends Application{
         decryptionWindow();
         settingsMenu();
 
-
+        //the current way to implement this bc closing a window does not work that well
+        if(fileOpenerHasbeenOpenENC){
+            String s = f.openFileDialog("","");
+            if(s != null){
+                System.out.println(s);
+                fileOpenerHasbeenOpenENC = !fileOpenerHasbeenOpenENC;
+            }
+        }
 
     }
 
-
-
     //all the Methods for the different Windows
     private void EncryptionWindow(){
-        //todo fix this to work so that I can actually open a new window
-        //Create a window called "My First Tool", with a menu bar.
-        Boolean test = false;
-
         ImBoolean pOpen = new ImBoolean(true);
         ImGui.begin("Encryption",pOpen,ImGuiWindowFlags.MenuBar );
         if (ImGui.beginMenuBar()) {
@@ -72,8 +73,9 @@ public class Gui extends Application{
             }
             if(ImGui.button("Open File selector")){
                 //todo this is currently a test function to test out the file chooser
-               // File test =
+                fileOpenerHasbeenOpenENC =!fileOpenerHasbeenOpenENC;
             }
+            //ImGuiInputTextFlags.Password maybe just add to the end of the line to hide password
             if(ImGui.inputTextMultiline("Password: ", encPswdWindow,200, 20)){
                 System.out.println("password typed in:"+ encPswdWindow);
             }
@@ -114,10 +116,10 @@ public class Gui extends Application{
 
         //Imgui checkboxes are just a fancy button they only detect the state change and nothing else, so you have to treat them as if they were a button
         if (ImGui.checkbox("Delete Config after usage", deleteConfAfterUsage)){
-            deleteConfAfterUsage = switchBoolean(deleteConfAfterUsage);
+            deleteConfAfterUsage = !deleteConfAfterUsage;
         }
         if(ImGui.checkbox("Delete File after usage", deleteFileAfterusage)){
-            deleteFileAfterusage = switchBoolean(deleteFileAfterusage);
+            deleteFileAfterusage = !deleteFileAfterusage;
         }
 
         ImGui.end();
@@ -130,13 +132,4 @@ public class Gui extends Application{
         ImGui.text("CurrentFile Opened: ");
     }
     //switches a boolean and then returns the switched version
-    private Boolean switchBoolean(Boolean input){
-        if(input){
-            input = false;
-
-        }else{
-            input = true;
-        }
-        return input;
-    }
 }
