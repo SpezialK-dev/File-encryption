@@ -34,15 +34,10 @@ public class FileSelector {
         //code that shows the all the Files in a directory
         ImInt i =new  ImInt(0);
         String[] testAr =new String[]{"hello","this","is ", "a ", "you ", "I hope ", "this", "works"};
-        ImGui.beginChild("Scrolling");
-        for (String test: testAr) {
-            //what I want to add
-            if(ImGui.button(test)){
-                System.out.println("button was pressed");
-            }
 
-        }
-        ImGui.endChild();
+        //this is a list all the Files in the dir
+        ImGui.listBox("test", i, testAr);
+
 
         if(ImGui.button("Open File")){
             ImGui.end();
