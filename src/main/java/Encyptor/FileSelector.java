@@ -4,15 +4,11 @@ import imgui.ImGui;
 import imgui.flag.ImGuiWindowFlags;
 import imgui.type.*;
 
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.List;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
+import java.io.File;
 
 public class FileSelector {
+    String home = System.getProperty("user.home");
+    int selectedItem = 0;
     public FileSelector(){
 
     }
@@ -32,18 +28,32 @@ public class FileSelector {
         ImBoolean pOpen = new ImBoolean(true);
         ImGui.begin("File Selector",pOpen, ImGuiWindowFlags.NoCollapse );
         //code that shows the all the Files in a directory
-        ImInt i =new  ImInt(0);
-        String[] testAr =new String[]{"hello","this","is ", "a ", "you ", "I hope ", "this", "works"};
+        ImInt i =new  ImInt(0);//current temp state in the moment of the array
+
+        //String[] testAr =new String[]{"NoFileSelected","this","is ", "a ", "you ", "I hope ", "this", "works"};
+        File[] filesListing =  ls(home);//gets all the files in my current home dir(just debug currently)
+        String[] displaynames =convertFileToString(filesListing);
 
         //this is a list all the Files in the dir
-        ImGui.listBox("test", i, testAr);
+        ImGui.listBox("Dir", i, displaynames);
+        //this code determines what thing has been pressed cannot open the 0 part of a array
+        if(i.get() != 0){
+            selectedItem = i.get();
+            //File currentItem =
+            /*if(){
 
+            }*/
+            System.out.println(i);
+        }
 
+        //ImGui.text("Selected Item: " + testAr[selectedItem]);
         if(ImGui.button("Open File")){
             ImGui.end();
-            //todo find out why this is not working
-            // this is not closing and not returning anything
+            //todo actually return the full path to the currently selected File (index -1!!)
             return "hello this is a test";
+        }
+        if(ImGui.button("unselected File")){
+            selectedItem = 0;
         }
         //temp file name
 
@@ -52,18 +62,20 @@ public class FileSelector {
         return null;
     }
     //lists all the Files in a directory
-    private List<Path> ls(String path) {
-        //the stream of the files
-        Stream<Path> filesStream = null;
-        //try catch block that should get all the Files paths
-        try{
-            filesStream= Files.list(Paths.get(path));
-        } catch (IOException e) {
-            throw new RuntimeException(e);
+    private File[] ls(String path) {
+        File startpoint = new File(path);
+        File[] out = startpoint.listFiles();
+        return out;
+    }
+    //convert the File array to a more suitable String version to display
+    private String[] convertFileToString(File[] input){
+        int index = 1;
+        String[] out =  new String[input.length+1];
+        out[0] = "Files to Select From";
+        for (File f : input) {
+            out[index] = f.getName();
+            index = index+1;
         }
-        //gets a list of paths
-        List<Path> filesList = filesStream.collect(Collectors.toList());
-
-        return null;
+        return out;
     }
 }
