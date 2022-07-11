@@ -5,9 +5,11 @@ import imgui.flag.ImGuiWindowFlags;
 import imgui.type.*;
 
 import java.io.File;
+import java.util.regex.Pattern;
 
 public class FileSelector {
-    String home = System.getProperty("user.home");
+    //starts in the users home dir
+    String currentDir = System.getProperty("user.home");
     int selectedItem = 0;
     public FileSelector(){
 
@@ -31,31 +33,54 @@ public class FileSelector {
         ImInt i =new  ImInt(0);//current temp state in the moment of the array
 
         //String[] testAr =new String[]{"NoFileSelected","this","is ", "a ", "you ", "I hope ", "this", "works"};
-        File[] filesListing =  ls(home);//gets all the files in my current home dir(just debug currently)
+        File[] filesListing =  ls(currentDir);//gets all the files in my current home dir(just debug currently)
         String[] displaynames =convertFileToString(filesListing);
 
         //this is a list all the Files in the dir
         ImGui.listBox("Dir", i, displaynames);
         //this code determines what thing has been pressed cannot open the 0 part of a array
         if(i.get() != 0){
+            //checking if it is dir and then moving into it
             selectedItem = i.get();
-            //File currentItem =
-            /*if(){
-
-            }*/
-            System.out.println(i);
+            if(filesListing[i.get()-1].isDirectory()){
+                currentDir = filesListing[i.get()-1].getAbsolutePath();
+                selectedItem =0;
+            }
+            //System.out.println(i);
         }
 
+        if(ImGui.button("Go Back One Directory")){
+            //splits the string and checks for 0
+             String[] pathdev = currentDir.split(Pattern.quote("/"));
+             if(pathdev.length == 0){
+                System.out.println("You have reached a root directory");
+                //todo write a pop up
+             }else {
+                 //removes one the last dir and removes
+                 pathdev[pathdev.length - 1] = "";
+                 //todo remove the first part of the array because 0 !!!work currently under Linux
+                 String out = "";
+                 //combines all of strings
+                 for (String tempS : pathdev) {
+                     out = out + "/" + tempS;
+                 }
+                 currentDir = out;
+             }
+        }
         //ImGui.text("Selected Item: " + testAr[selectedItem]);
         if(ImGui.button("Open File")){
-            ImGui.end();
             //todo actually return the full path to the currently selected File (index -1!!)
-            return "hello this is a test";
+            //selects the files and returns it
+            if(selectedItem != 0){
+                String returnValue = filesListing[selectedItem-1].getAbsolutePath();
+                        ImGui.end();
+                return returnValue;
+            }else{
+                System.out.println("No File selected");
+            }
+
         }
-        if(ImGui.button("unselected File")){
-            selectedItem = 0;
-        }
-        //temp file name
+
 
         //this should never be reached
         ImGui.end();
