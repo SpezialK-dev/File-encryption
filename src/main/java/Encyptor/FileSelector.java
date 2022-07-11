@@ -9,8 +9,14 @@ import java.util.regex.Pattern;
 
 public class FileSelector {
     //starts in the users home dir
-    String currentDir = System.getProperty("user.home");
-    int selectedItem = 0;
+    private String currentDir = System.getProperty("user.home");
+    //all the arrays to remove amount of reads
+    private File[] filesListing =null;
+    private String[] displaynames = null;
+    //a variable that is there and asks if I need to refresh the variables
+
+    private Boolean needsrefresh = true;
+    private int selectedItem = 0;
     public FileSelector(){
 
     }
@@ -33,9 +39,12 @@ public class FileSelector {
         ImInt i =new  ImInt(0);//current temp state in the moment of the array
 
         //String[] testAr =new String[]{"NoFileSelected","this","is ", "a ", "you ", "I hope ", "this", "works"};
-        File[] filesListing =  ls(currentDir);//gets all the files in my current home dir(just debug currently)
-        String[] displaynames =convertFileToString(filesListing);
-
+        if(needsrefresh){
+            filesListing = ls(currentDir);//gets all the files in my current home dir(just debug currently)
+            displaynames = convertFileToString(filesListing);
+            needsrefresh =false;
+            System.out.println("refreshed Dirs");
+        }
         //this is a list all the Files in the dir
         ImGui.listBox("Dir", i, displaynames);
         //this code determines what thing has been pressed cannot open the 0 part of a array
@@ -45,6 +54,7 @@ public class FileSelector {
             if(filesListing[i.get()-1].isDirectory()){
                 currentDir = filesListing[i.get()-1].getAbsolutePath();
                 selectedItem =0;
+                needsrefresh = true;
             }
             //System.out.println(i);
         }
@@ -64,6 +74,8 @@ public class FileSelector {
                  for (String tempS : pathdev) {
                      out = out + "/" + tempS;
                  }
+                 //to actually refresh the page
+                 needsrefresh =true;
                  currentDir = out;
              }
         }
@@ -98,7 +110,12 @@ public class FileSelector {
         String[] out =  new String[input.length+1];
         out[0] = "Files to Select From";
         for (File f : input) {
-            out[index] = f.getName();
+            if(f.isDirectory()){
+                out[index] = "D: "+ f.getName();
+
+            }else{
+                out[index] = f.getName();
+            }
             index = index+1;
         }
         return out;
