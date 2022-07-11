@@ -14,8 +14,8 @@ public class FileSelector {
     private File[] filesListing =null;
     private String[] displaynames = null;
     //a variable that is there and asks if I need to refresh the variables
-
     private Boolean needsrefresh = true;
+    //saves what is selected
     private int selectedItem = 0;
     public FileSelector(){
 
@@ -39,12 +39,20 @@ public class FileSelector {
         ImInt i =new  ImInt(0);//current temp state in the moment of the array
 
         //String[] testAr =new String[]{"NoFileSelected","this","is ", "a ", "you ", "I hope ", "this", "works"};
+        //helps to not put a lot of strain on drive
         if(needsrefresh){
             filesListing = ls(currentDir);//gets all the files in my current home dir(just debug currently)
             displaynames = convertFileToString(filesListing);
             needsrefresh =false;
             System.out.println("refreshed Dirs");
         }
+        //shows the full path of the dir we are currently in
+        /*//todo write this so that it shows the current path as a editable string
+        ImString dir = new ImString(currentDir,800);
+        if(ImGui.inputTextMultiline("cur dir: ",dir, 200,20)){
+
+        }*/
+
         //this is a list all the Files in the dir
         ImGui.listBox("Dir", i, displaynames);
         //this code determines what thing has been pressed cannot open the 0 part of a array
@@ -58,6 +66,7 @@ public class FileSelector {
             }
             //System.out.println(i);
         }
+        ImGui.text("Current selected File: " + displaynames[selectedItem]);
 
         if(ImGui.button("Go Back One Directory")){
             //splits the string and checks for 0
@@ -81,7 +90,6 @@ public class FileSelector {
         }
         //ImGui.text("Selected Item: " + testAr[selectedItem]);
         if(ImGui.button("Open File")){
-            //todo actually return the full path to the currently selected File (index -1!!)
             //selects the files and returns it
             if(selectedItem != 0){
                 String returnValue = filesListing[selectedItem-1].getAbsolutePath();
