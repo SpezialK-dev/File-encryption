@@ -31,8 +31,8 @@ public class FileSelector {
         }
      */
     //a custom File Selector
-
-    public String openFileDialog(String sourcePath,String endingParameter){
+    //todo add a starting parameter so that it actually can start in a different dir
+    public String openFileDialog(String endingParameter){
         ImBoolean pOpen = new ImBoolean(true);
         ImGui.begin("File Selector",pOpen, ImGuiWindowFlags.NoCollapse );
         //code that shows the all the Files in a directory

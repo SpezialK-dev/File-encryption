@@ -233,7 +233,7 @@ public class GuiOld extends Main implements ActionListener {
                 try {
                     //because might fabyte[] iv = params.getParameterSpec(IvParameterSpec.class).getIV();il so there is a try statement
                     //returns a new type that has the salt and IV stored
-                    out = encryptedFile(password, path, tempdir, statusL, saltGen()); //actually encrypts the thing and creates a new file with this
+                    out = encryptedFile(password, path, tempdir, saltGen()); //actually encrypts the thing and creates a new file with this
                     //converting the output into their own arrays
                     curSalt = out.retSalt();
                     curIV = out.retIv();
@@ -340,7 +340,7 @@ public class GuiOld extends Main implements ActionListener {
 
             //actual decryption
             try {
-                DecriptionFiles(password, path, tempdir, statusL, tempsalt, tempiv);
+                DecriptionFiles(password, path, tempdir, tempsalt, tempiv);
             //file deletion 
             //the actual File 
             if(deleteFile.isSelected() == true){

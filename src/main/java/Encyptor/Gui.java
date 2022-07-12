@@ -1,5 +1,6 @@
 package Encyptor;
 
+import Encyptor.cipher.Output;
 import imgui.flag.ImGuiInputTextFlags;
 import imgui.flag.ImGuiWindowFlags;
 import imgui.type.ImBoolean;
@@ -8,7 +9,18 @@ import imgui.ImGui;
 import imgui.app.Application;
 import imgui.app.Configuration;
 
+import javax.crypto.BadPaddingException;
+import javax.crypto.IllegalBlockSizeException;
+import javax.crypto.NoSuchPaddingException;
 import java.io.File;
+import java.io.IOException;
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
+import java.security.SecureRandom;
+import java.security.spec.InvalidKeySpecException;
+import java.security.spec.InvalidParameterSpecException;
+
+import static Encyptor.cipher.EncAndDec.encryptedFile;
 
 
 //this is the new Gui there to replace the old Jpanel one
@@ -25,7 +37,13 @@ public class Gui extends Application{
 
     //EncryptionWindow Variables
     boolean fileOpenerHasbeenOpenENC = false;
-    ImString encPswdWindow = new ImString("",256);
+    ImString encPswdWindow = new ImString("password",256);
+
+    //the current path to the File
+    String currentFilepath = null;
+
+    //the output of the File might need to be replaced
+    private Output out ;
 
     //decryptionWindow Variables
 
@@ -43,9 +61,10 @@ public class Gui extends Application{
 
         //the current way to implement this bc closing a window does not work that well
         if(fileOpenerHasbeenOpenENC){
-            String s = f.openFileDialog("","");
+            String s = f.openFileDialog("");
             if(s != null){
-                System.out.println(s);
+                //selects the File and closes the Gui
+                currentFilepath = s;
                 fileOpenerHasbeenOpenENC = !fileOpenerHasbeenOpenENC;
             }
         }
@@ -61,7 +80,7 @@ public class Gui extends Application{
             if (ImGui.beginMenu( "File")) {
                 if (ImGui.menuItem("Open..", "Ctrl+O")) {
                     fileOpend("test"); }
-                if (ImGui.menuItem("Close", "Ctrl+W")) {
+                if(ImGui.menuItem("Close", "Ctrl+W")) {
 
                 }
                 //end Drop down menu
@@ -70,6 +89,33 @@ public class Gui extends Application{
             ImGui.endMenuBar();
             if(ImGui.button("Encrypt")){
                 //todo write code for encryption
+                //tests if the password field is empty
+                if(encPswdWindow.get().trim().length() == 0 || currentFilepath == null){
+                    System.out.println("No password was entered or you didn't select a File!");
+                }else{
+                    char[] char_Password_Arr = encPswdWindow.get().toCharArray();
+                    try {
+                        out = encryptedFile(char_Password_Arr, currentFilepath, currentFilepath + ".enc", saltGen());
+                        //todo make this into a single line that catches all of the statements
+                    }catch (NoSuchPaddingException e) {
+                        throw new RuntimeException(e);
+                    } catch (IllegalBlockSizeException e) {
+                        throw new RuntimeException(e);
+                    } catch (NoSuchAlgorithmException e) {
+                        throw new RuntimeException(e);
+                    } catch (IOException e) {
+                        throw new RuntimeException(e);
+                    } catch (BadPaddingException e) {
+                        throw new RuntimeException(e);
+                    } catch (InvalidKeySpecException e) {
+                        throw new RuntimeException(e);
+                    } catch (InvalidParameterSpecException e) {
+                        throw new RuntimeException(e);
+                    } catch (InvalidKeyException e) {
+                        throw new RuntimeException(e);
+                    }
+                }
+
             }
             if(ImGui.button("Open File selector")){
                 //todo this is currently a test function to test out the file chooser
@@ -77,7 +123,6 @@ public class Gui extends Application{
             }
             //ImGuiInputTextFlags.Password maybe just add to the end of the line to hide password
             if(ImGui.inputTextMultiline("Password: ", encPswdWindow,200, 20)){
-                System.out.println("password typed in:"+ encPswdWindow);
             }
 
 
@@ -132,4 +177,16 @@ public class Gui extends Application{
         ImGui.text("CurrentFile Opened: ");
     }
     //switches a boolean and then returns the switched version
+    private byte[] saltGen() throws NoSuchAlgorithmException
+    {
+        SecureRandom sr;
+        try {
+            sr = SecureRandom.getInstance("NativePRNG"); //Slower and uses the system native defined RNG generator. (Use "SHA1PRNG" if you want something more consistent or faster)
+        } catch (NoSuchAlgorithmException e) {
+            sr = SecureRandom.getInstanceStrong();
+        }
+        byte[] bytes = new byte[16];
+        sr.nextBytes(bytes);
+        return bytes;
+    }
 }

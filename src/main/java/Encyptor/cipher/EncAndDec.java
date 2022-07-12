@@ -31,18 +31,16 @@ public class EncAndDec extends GuiOld {
     }
     //encryptor
 
-public static Output encryptedFile(char[] password, String fileInputPath, String fileOutPath, JLabel status,byte[] salt)
+public static Output encryptedFile(char[] password, String fileInputPath, String fileOutPath,byte[] salt)
 throws NoSuchAlgorithmException, NoSuchPaddingException, InvalidKeyException, IOException,
 IllegalBlockSizeException, BadPaddingException, InvalidKeySpecException, InvalidParameterSpecException {
     //
-    status.setText("Converting Key");
-    //creates a key that will later be used to encryped everything 
+    //creates a key that will later be used to encryped everything
     SecretKeyFactory factory = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA256");
     KeySpec spec = new PBEKeySpec(password, salt, 65536, 256);//uses 65536 rounds and 256 bit encryption
     SecretKey tmp = factory.generateSecret(spec);
     SecretKey secret = new SecretKeySpec(tmp.getEncoded(), "AES");//uses AES
     
-    status.setText("reading File");
     //reads the input of the file as an array
     File fileInput = new File(fileInputPath);
     FileInputStream inputStream = new FileInputStream(fileInput);
@@ -51,7 +49,6 @@ IllegalBlockSizeException, BadPaddingException, InvalidKeySpecException, Invalid
     inputStream.close();
     
     //encrypting
-    status.setText("encyping");
     Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5Padding");
     cipher.init(Cipher.ENCRYPT_MODE, secret);
     AlgorithmParameters params = cipher.getParameters();
@@ -59,13 +56,11 @@ IllegalBlockSizeException, BadPaddingException, InvalidKeySpecException, Invalid
     byte[] outputBytes = cipher.doFinal(inputBytes);
     
     //output stream
-    status.setText("writing to new File");
     File fileEncryptOut = new File(fileOutPath);
     FileOutputStream outputStream = new FileOutputStream(fileEncryptOut);
     outputStream.write(outputBytes);
     outputStream.close();
-    status.setText("finished");
-    
+
     Output out = new Output(iv,salt);
     return out;
     }
@@ -78,7 +73,6 @@ IllegalBlockSizeException, BadPaddingException, InvalidKeySpecException, Invalid
  * @param password
  * @param fileInputPath
  * @param fileOutPath
- * @param status
  * @param salt
  * @param iv
  * @return
@@ -92,7 +86,7 @@ IllegalBlockSizeException, BadPaddingException, InvalidKeySpecException, Invalid
  * @throws InvalidKeySpecException
  * @throws InvalidAlgorithmParameterException
  */
-public static void DecriptionFiles(char[] password, String fileInputPath, String fileOutPath, JLabel status, byte[] salt, byte[] iv)
+public static void DecriptionFiles(char[] password, String fileInputPath, String fileOutPath, byte[] salt, byte[] iv)
         throws NoSuchAlgorithmException, NoSuchPaddingException, InvalidKeyException, FileNotFoundException, IOException, IllegalBlockSizeException, BadPaddingException, InvalidKeySpecException, InvalidAlgorithmParameterException{
 
    //Converting a key
@@ -102,7 +96,6 @@ public static void DecriptionFiles(char[] password, String fileInputPath, String
     SecretKey secret = new SecretKeySpec(tmp.getEncoded(), "AES");//uses AES
 
 
-    status.setText("reading File");
     //reads the input of the file as an array
     File fileInput = new File(fileInputPath);
     FileInputStream inputStream = new FileInputStream(fileInput);
@@ -110,17 +103,14 @@ public static void DecriptionFiles(char[] password, String fileInputPath, String
     inputStream.read(inputBytes);
     inputStream.close();
 
-    status.setText("decripting");
 
     Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5Padding");
     cipher.init(Cipher.DECRYPT_MODE, secret, new IvParameterSpec(iv));
 
-    status.setText("writing to new File");
     File fileEncryptOut = new File(fileOutPath);
     FileOutputStream outputStream = new FileOutputStream(fileEncryptOut);
     outputStream.write(cipher.doFinal(inputBytes));
     outputStream.close();
-    status.setText("finished");
 
     }
 }
