@@ -3,6 +3,7 @@ package Encyptor;
 
 import static Encyptor.cipher.EncAndDec.*;
 import Encyptor.cipher.Output;
+import Encyptor.utils.File_handling;
 
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -311,7 +312,7 @@ public class GuiOld extends Main implements ActionListener {
                 decryptFileName.setText("File Name: " + configL.getSelectedFile().getName());
                 
                 try {
-                    outputFileRead = readFile(configL.getSelectedFile().getPath());
+                    outputFileRead = File_handling.readFile(configL.getSelectedFile().getPath());
                 } catch (IOException ex) {
                     Logger.getLogger(GuiOld.class.getName()).log(Level.SEVERE, null, ex);
                 }
@@ -372,7 +373,7 @@ public class GuiOld extends Main implements ActionListener {
         if (e.getSource() == saveConfig) {
             String outSt = creatingOutputString();
             try {
-                StringWriter(outSt, outFilePath());
+                File_handling.StringWriter(outSt, outFilePath());
             } catch (IOException ex) {
                 Logger.getLogger(GuiOld.class.getName()).log(Level.SEVERE, null, ex);
             }
@@ -430,12 +431,7 @@ public class GuiOld extends Main implements ActionListener {
     }
 
     //writes out to a file
-    public void StringWriter(String input, String Filepath) throws IOException {
-        File outFile = new File(Filepath);
-        BufferedWriter outWriter = new BufferedWriter(new FileWriter(Filepath));
-        outWriter.write(input);
-        outWriter.close();
-    }
+
     //gives out the path for the file also generates the random name that is going to be used
     public String outFilePath() {
         Random rand = new Random();
@@ -444,11 +440,6 @@ public class GuiOld extends Main implements ActionListener {
         return dir + "/" + "SavedEncryptionData" + Integer.toString(n) + ".txt";
     }
 
-    //file reader that gives out a single string
-    public String readFile(String filePath) throws IOException {
-        Path path = Path.of(filePath);
-        return Files.readString(path);
-    }
 
     //splitting the thing into different parts
     public void splitAndConvertandSetParameters(String inputString) {

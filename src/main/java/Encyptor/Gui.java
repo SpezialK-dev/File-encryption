@@ -35,6 +35,8 @@ public class Gui extends Application{
     boolean deleteConfAfterUsage = false;
     boolean deleteFileAfterusage = false;
 
+    boolean show_hidden_files_Files_Selector = false;
+
     //EncryptionWindow Variables
     boolean fileOpenerHasbeenOpenENC = false;
     ImString encPswdWindow = new ImString("password",256);
@@ -46,6 +48,14 @@ public class Gui extends Application{
     private Output out ;
 
     //decryptionWindow Variables
+
+    //the Password
+    ImString dec_Psw_Window = new ImString("password", 256);
+    //the salt value
+    ImString dec_Salt_Window = new ImString("", 768);
+
+    //iv
+    ImString dec_IV_Window = new ImString("", 250);
 
     @Override
     protected void configure(Configuration config) {
@@ -79,9 +89,9 @@ public class Gui extends Application{
             //begin drop down menu
             if (ImGui.beginMenu( "File")) {
                 if (ImGui.menuItem("Open..", "Ctrl+O")) {
-                    fileOpend("test"); }
+                    fileOpenerHasbeenOpenENC =!fileOpenerHasbeenOpenENC; }
                 if(ImGui.menuItem("Close", "Ctrl+W")) {
-
+                    //todo add code to close the file open menu
                 }
                 //end Drop down menu
                 ImGui.endMenu();
@@ -114,6 +124,10 @@ public class Gui extends Application{
                     } catch (InvalidKeyException e) {
                         throw new RuntimeException(e);
                     }
+                    if(deleteFileAfterusage){
+                        System.out.println("deleted File at: " + currentFilepath);
+                        //todo add the actual removal of the File
+                    }
                 }
 
             }
@@ -122,9 +136,11 @@ public class Gui extends Application{
                 fileOpenerHasbeenOpenENC =!fileOpenerHasbeenOpenENC;
             }
             //ImGuiInputTextFlags.Password maybe just add to the end of the line to hide password
-            if(ImGui.inputTextMultiline("Password: ", encPswdWindow,200, 20)){
+            if(ImGui.inputTextMultiline(": Password", encPswdWindow,200, 20)){
             }
+            if(ImGui.button("export Settings")){
 
+            }
 
         }
         ImGui.end();
@@ -139,8 +155,9 @@ public class Gui extends Application{
             //begin Drop down menu
             if (ImGui.beginMenu( "File")) {
                 if (ImGui.menuItem("Open..", "Ctrl+O")) {
-                    fileOpend("test"); }
+                    fileOpenerHasbeenOpenENC =!fileOpenerHasbeenOpenENC; }
                 if (ImGui.menuItem("Close", "Ctrl+W")) {
+                    //todo add code to close
                 }
                 ImGui.endMenu();
                 //end Drop Down menu
@@ -150,6 +167,28 @@ public class Gui extends Application{
             if(ImGui.button("decrypt")){
                 //todo write code for decryption
             }
+            if(ImGui.button("Open File selector")){
+                //todo maybe replace this with some different variables
+                fileOpenerHasbeenOpenENC =!fileOpenerHasbeenOpenENC;
+            }
+            //todo add Salt, IV fields and make separate Strings for this
+
+            //the Password field
+            if(ImGui.inputTextMultiline(": Password",dec_Psw_Window ,200, 20)){
+
+            }
+            //The Salt field
+            if(ImGui.inputTextMultiline(": Salt",dec_Salt_Window ,200, 20)){
+            }
+
+            //the IV field
+            if(ImGui.inputTextMultiline(": IV", dec_IV_Window, 200,20)){
+
+            }
+            if(ImGui.button("Import Settings")){
+
+            }
+
         }
         ImGui.end();
     }
@@ -165,6 +204,9 @@ public class Gui extends Application{
         }
         if(ImGui.checkbox("Delete File after usage", deleteFileAfterusage)){
             deleteFileAfterusage = !deleteFileAfterusage;
+        }
+        if(ImGui.checkbox("Show Hidden Files in File Selector", show_hidden_files_Files_Selector)){
+            show_hidden_files_Files_Selector = !show_hidden_files_Files_Selector;
         }
 
         ImGui.end();
