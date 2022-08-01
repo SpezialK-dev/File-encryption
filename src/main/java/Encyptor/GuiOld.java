@@ -418,7 +418,7 @@ public class GuiOld extends Main implements ActionListener {
     }
     //converts everythign into a single string that can be writen out to a file
     public String creatingOutputString() {
-        if (curSalt == null | pswField.getText() == null) {
+        if (curSalt == null | pswField.getText() == null | curIV ==null) {
             JOptionPane.showMessageDialog(frame,
                     "There was a fatal flaw",
                     "Error",

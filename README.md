@@ -7,13 +7,8 @@ You can use the tool by selecting  a file then pressing the encryption button. I
 
 ## Roadmap
 
-- [X] update Gui to something better looking
-  - [X] dark mode
-  - [ ] custom color schemes
-  - [ ] fix black color scheme in pop ups
 - [ ] add more encryption methods
   - [ ]  make Plugin support
-- [X] clean the backend Gui code 
 - [X] allow different character sets
 - [X] add support for more file types
     - [X] jpg
@@ -28,10 +23,14 @@ You can use the tool by selecting  a file then pressing the encryption button. I
     - [X] mkv
 - [ ] add threading for multiple files
 - [ ] decrypt multiple files
-- [ ] add native File chooser so that it looks better
+- [X] add native file chooser so that it looks better
+  - upgrade the look of the file chooser
 - [ ] make memory footprint smaller
 - [ ] switch Gui frontend to https://github.com/SpaiR/imgui-java
-
+  - [ ] finish encryption window
+  - [ ] finish decryption window
+  - [ ] finish settings menu
+    - [ ] finish Plugin window
 ### dependencies
 
 - https://github.com/SpaiR/imgui-java
