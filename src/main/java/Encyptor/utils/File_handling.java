@@ -33,9 +33,13 @@ public class File_handling{
             //the path selected
             endpath = endpath + "/.config/Encryption-Java/";
             System.out.println(endpath);
+            //creates the actual Path and gives Status to the Console
+            Boolean stauts_Creation= new File(endpath).mkdirs();
+            System.out.println("Status in creating: " + endpath + " Status: " + stauts_Creation);
         }if(operating_system.equals("windows")){
             System.out.println("Windows has been selected as your Operating system");
             //todo add code for the windows operating system
+            System.out.println("Coming Soon");
         }else{
             //this currently gets triggered every time this code gets run even though it should not
             System.out.println("we could not find your Operating System");
