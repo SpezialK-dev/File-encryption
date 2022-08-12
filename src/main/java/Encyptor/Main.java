@@ -16,6 +16,9 @@ public class Main {
     static int launch_option = 0;
     static Boolean launched_bool = false;
     public static void main(String[] args) {
+        System.out.println("!!DEVELOPMENT CONSOLE!!");
+        System.out.println("\n\n\n");
+
         //todo make a launcher for to choose between the different Gui's
         File_handling.get_Path_to_Config_dir();
         //Thread code
