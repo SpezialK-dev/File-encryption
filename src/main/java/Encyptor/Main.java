@@ -6,79 +6,77 @@ import javax.swing.*;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.File;
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.regex.Pattern;
 
+import static Encyptor.utils.File_handling.readFile;
 import static imgui.app.Application.launch;
 
 
 
-public class Main {
+public class  Main {
     //what launch option is selected
+    final static String os_info = System.getProperty("os.name").toLowerCase().trim();
+    //depending on how many options we will have we might have to create a hashmap with options
     static int launch_option = 0;
+    //all the file handling stuff
+    static String config_dir =  File_handling.get_Path_to_Config_dir();
+    static File path_to_config_File = new File(config_dir + "config.conf");
     static Boolean launched_bool = false;
     public static void main(String[] args) {
         System.out.println("!!DEVELOPMENT CONSOLE!!");
         System.out.println("\n\n\n");
+        System.out.println("Code running on: " + os_info);
+        //todo write the Config File creation / reading
 
-        //todo make a launcher for to choose between the different Gui's
-        File_handling.get_Path_to_Config_dir();
-        //Thread code
-        Launch_Menu thread_Obj_coust  = new Launch_Menu();
-        Thread thread_obj = new Thread((Runnable) thread_Obj_coust);
-        thread_obj.start();
-
-        //end of the thread code
-        //launcher();
-        /*
-        if(launch_option == 1){
-            System.out.println("launched new Gui");
-            launched_bool = true;
-            launch(new Gui());
+        //checks for existence
+        if(!path_to_config_File.isFile()){
+            System.out.println("config FIle does not exist:");
+        }else{
+            System.out.println("File found");
+            //reads the file
+            String out_from_File_in = new String();
+            try {
+                out_from_File_in = readFile(path_to_config_File.getAbsolutePath());
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+            System.out.println("What was found in the file: " + out_from_File_in);
+            launch_option = Integer.parseInt(out_from_File_in.trim());
         }
-        if(launch_option == 2){
-            System.out.println("launched Old Gui");
-            launched_bool = true;
-            new GuiOld();
-        }*/
 
         //new GuiOld();
         //launch(new Gui());
+        if(launch_option == 0){
+            Launch_Menu l = new Launch_Menu();
+        }
         if(launch_option == 1){
-            System.out.println("launched new Gui");
-            launched_bool = true;
             launch(new Gui());
         }
         if(launch_option == 2){
-            System.out.println("launched Old Gui");
-            launched_bool = true;
             new GuiOld();
         }
+        //the file writer to write the config
+
     }
     public void update_launch_option(int update){
         System.out.println("updated Launch option with : " + update);
         launch_option = update;
-    }
-
-
-    //this inner class will be used for the launch menu, to be later destroyed
-    private static class Launch_Thread extends Thread {
-        public void run(){
-
-        }
-        public static void main(String[] args){
-            launcher();
-        }
-        //seeing what menu needs to be launched
-        private static void launcher(){
-            if(launch_option == 0){
-                Launch_Menu l = new Launch_Menu();
-            }
-            if(launch_option == 1){
-                launch(new Gui());
-            }
-            if(launch_option == 2){
-                new GuiOld();
+        if(!path_to_config_File.isFile()){
+            System.out.println("The current Value that is printed: " + launch_option);
+            try {
+                File_handling.StringWriter(String.valueOf(launch_option),path_to_config_File.getAbsolutePath());
+            } catch (IOException e) {
+                throw new RuntimeException(e);
             }
         }
     }
+    //get the current OS info Variable
+    public String getOs_info(){
+        return os_info;
+    }
+
 
 }

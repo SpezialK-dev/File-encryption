@@ -1,5 +1,6 @@
 package Encyptor.utils;
 
+
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
@@ -25,14 +26,11 @@ public class File_handling{
     public static String get_Path_to_Config_dir(){
         //todo add code to get the Path depending on operating System
         String operating_system = System.getProperty("os.name").toLowerCase().trim();
-        System.out.println(operating_system);
         String endpath = System.getProperty("user.home");
-        //currently this is
         if(operating_system.equals("linux")){
             System.out.println("Linux has been selected as your Operating system");
             //the path selected
             endpath = endpath + "/.config/Encryption-Java/";
-            System.out.println(endpath);
             //creates the actual Path and gives Status to the Console
             Boolean stauts_Creation= new File(endpath).mkdirs();
             System.out.println("Status in creating: " + endpath + " Status: " + stauts_Creation);
@@ -42,8 +40,9 @@ public class File_handling{
             System.out.println("Coming Soon");
         }else{
             //this currently gets triggered every time this code gets run even though it should not
-            System.out.println("we could not find your Operating System");
+            System.out.println("we could not find your Operating System (can be ignored !! if it prints a path before)");
         }
         return endpath;
     }
+
 }
