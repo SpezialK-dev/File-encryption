@@ -5,6 +5,10 @@ This is an encryption tool that uses the AES256 cipher to encrypt your Files
 You can use the tool by selecting  a file then pressing the encryption button. If you want to decrypt the file just press "decrypt" however, if you want to decrypt it at a later date or want to send to another person, press the "save config" button. This should create a config with all the needed parameters needed to decrypt the file this file should be located in your execution directory (of the jar file).
 
 
+## IMPORTANT !!
+Currently, this program is only tested on linux and some code for windows is not implemented yet. 
+
+
 ## Roadmap
 
 - [ ] add more encryption methods
