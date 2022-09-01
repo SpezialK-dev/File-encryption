@@ -284,15 +284,15 @@ public class GuiOld extends Main implements ActionListener {
                             + "\nthis shows you how to use this program"
                             + "\n"
                             + "\nthe Key Field should be used to enter the password that the user wants to use to encript/decript the file"
-                            + "\nthe decription Key could be enterd into the program if knowen "
-                            + "\nthe password will be used with a random salt to generate the key for encription"
+                            + "\nthe description Key could be entered into the program if known "
+                            + "\nthe password will be used with a random salt to generate the key for encryption"
                             + "\nall info shows all of the information about the current salt and password"
-                            + "\nload file should be used to load a file to de- or encript"
+                            + "\nload file should be used to load a file to de- or encrypt"
                             + "\nclear Info clears salt and IV"
-                            + "\nthe password and salt can be reused to decript something imidialy"
+                            + "\nthe password and salt can be reused to decrypt something medially"
                             + "\nso the salt stay in cach as long as the app is open "
-                            + "\nselecthing for the file to be delted after usage deltes the File after is was used this is not a safe delete So"
-                            + "\nthere is the possibilty for the File to be recoverd after deletion",
+                            + "\nselecting for the file to be deleted after usage deletes the File after is was used this is not a safe delete So"
+                            + "\nthere is the possibility for the File to be recovered after deletion",
                     "Help",
                     JOptionPane.PLAIN_MESSAGE);
         

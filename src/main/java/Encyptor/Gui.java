@@ -166,6 +166,11 @@ public class Gui extends Application{
             //end menubar
             if(ImGui.button("decrypt")){
                 //todo write code for decryption
+                //to check that it is none null
+                if(dec_Psw_Window.get().trim().length() != 0  && dec_Psw_Window.get().trim().length() != 0  && dec_IV_Window.get().trim().length() != 0){
+                    System.out.println("all Fields were filled!");
+
+                }
             }
             if(ImGui.button("Open File selector")){
                 //todo maybe replace this with some different variables
