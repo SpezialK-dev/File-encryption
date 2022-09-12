@@ -23,10 +23,8 @@ import java.security.spec.InvalidParameterSpecException;
 import static Encyptor.cipher.EncAndDec.encryptedFile;
 
 
-//this is the new Gui there to replace the old Jpanel one
 public class Gui extends Application{
     //all the Variables for settings
-    //this might be really useless
     ImGui gui = new ImGui();
     FileSelector f = new FileSelector();
     //this is the window for all the encryption stuff
@@ -89,9 +87,9 @@ public class Gui extends Application{
             //begin drop down menu
             if (ImGui.beginMenu( "File")) {
                 if (ImGui.menuItem("Open..", "Ctrl+O")) {
-                    fileOpenerHasbeenOpenENC =!fileOpenerHasbeenOpenENC; }
+                    fileOpenerHasbeenOpenENC = !fileOpenerHasbeenOpenENC; }
                 if(ImGui.menuItem("Close", "Ctrl+W")) {
-                    //todo add code to close the file open menu
+                    fileOpenerHasbeenOpenENC = !fileOpenerHasbeenOpenENC;
                 }
                 //end Drop down menu
                 ImGui.endMenu();
@@ -157,7 +155,7 @@ public class Gui extends Application{
                 if (ImGui.menuItem("Open..", "Ctrl+O")) {
                     fileOpenerHasbeenOpenENC =!fileOpenerHasbeenOpenENC; }
                 if (ImGui.menuItem("Close", "Ctrl+W")) {
-                    //todo add code to close
+                    fileOpenerHasbeenOpenENC =!fileOpenerHasbeenOpenENC;
                 }
                 ImGui.endMenu();
                 //end Drop Down menu
@@ -176,7 +174,6 @@ public class Gui extends Application{
                 //todo maybe replace this with some different variables
                 fileOpenerHasbeenOpenENC =!fileOpenerHasbeenOpenENC;
             }
-            //todo add Salt, IV fields and make separate Strings for this
 
             //the Password field
             if(ImGui.inputTextMultiline(": Password",dec_Psw_Window ,200, 20)){
@@ -197,7 +194,6 @@ public class Gui extends Application{
         }
         ImGui.end();
     }
-    //todo fix settings menu
     private void settingsMenu(){
         ImBoolean pOpen = new ImBoolean(true);
         ImGui.begin("Settings",pOpen);

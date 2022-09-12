@@ -66,10 +66,6 @@ IllegalBlockSizeException, BadPaddingException, InvalidKeySpecException, Invalid
     }
     //decriptor
 /**
- * TODO 
- * add option for images so that it automaticly saves as the input parameter
- */
-/**
  * @param password
  * @param fileInputPath
  * @param fileOutPath

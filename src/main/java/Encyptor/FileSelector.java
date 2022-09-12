@@ -38,7 +38,6 @@ public class FileSelector {
         //code that shows the all the Files in a directory
         ImInt i =new  ImInt(0);//current temp state in the moment of the array
 
-        //String[] testAr =new String[]{"NoFileSelected","this","is ", "a ", "you ", "I hope ", "this", "works"};
         //helps to not put a lot of strain on drive
         if(needsrefresh){
             filesListing = ls(currentDir);//gets all the files in my current home dir(just debug currently)
@@ -70,6 +69,7 @@ public class FileSelector {
 
         if(ImGui.button("Go Back One Directory")){
             //splits the string and checks for 0
+            //todo add different os root dirs
              String[] pathdev = currentDir.split(Pattern.quote("/"));
              if(pathdev.length == 0){
                 System.out.println("You have reached a root directory");
@@ -77,7 +77,7 @@ public class FileSelector {
              }else {
                  //removes one the last dir and removes
                  pathdev[pathdev.length - 1] = "";
-                 //todo remove the first part of the array because 0 !!!work currently under Linux
+                 //todo remove the first part of the array because 0 !!!works currently under Linux
                  String out = "";
                  //combines all of strings
                  for (String tempS : pathdev) {

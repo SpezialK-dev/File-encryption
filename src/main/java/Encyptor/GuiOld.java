@@ -375,7 +375,6 @@ public class GuiOld extends Main implements ActionListener {
             }
         }
         if(e.getSource() == changeColor) {
-            //todo make it so that this actually updates the GuiOld since this does not change to color
             String currentTheme = changeColor.getText();
             if (currentTheme == "Dark Mode") {
                 changeColor.setText("Light Mode");

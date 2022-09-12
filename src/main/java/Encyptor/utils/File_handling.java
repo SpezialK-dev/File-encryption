@@ -24,7 +24,6 @@ public class File_handling{
         outWriter.close();
     }
     public static String get_Path_to_Config_dir(){
-        //todo add code to get the Path depending on operating System
         String operating_system = System.getProperty("os.name").toLowerCase().trim();
         String endpath = System.getProperty("user.home");
         if(operating_system.equals("linux")){

@@ -29,7 +29,6 @@ public class  Main {
         System.out.println("!!DEVELOPMENT CONSOLE!!");
         System.out.println("\n\n\n");
         System.out.println("Code running on: " + os_info);
-        //todo write the Config File creation / reading
 
         //checks for existence
         if(!path_to_config_File.isFile()){
