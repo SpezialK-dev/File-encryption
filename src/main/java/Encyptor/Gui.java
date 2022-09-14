@@ -1,7 +1,6 @@
 package Encyptor;
 
 import Encyptor.cipher.Output;
-import imgui.flag.ImGuiInputTextFlags;
 import imgui.flag.ImGuiWindowFlags;
 import imgui.type.ImBoolean;
 import imgui.type.ImString;
@@ -12,7 +11,6 @@ import imgui.app.Configuration;
 import javax.crypto.BadPaddingException;
 import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.NoSuchPaddingException;
-import java.io.File;
 import java.io.IOException;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
@@ -96,7 +94,6 @@ public class Gui extends Application{
             }
             ImGui.endMenuBar();
             if(ImGui.button("Encrypt")){
-                //todo write code for encryption
                 //tests if the password field is empty
                 if(encPswdWindow.get().trim().length() == 0 || currentFilepath == null){
                     System.out.println("No password was entered or you didn't select a File!");
