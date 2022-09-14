@@ -24,7 +24,6 @@ import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.PBEKeySpec;
 import javax.crypto.spec.SecretKeySpec;
-import javax.swing.JLabel;
 
 public class EncAndDec extends GuiOld {
     public EncAndDec(){

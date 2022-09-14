@@ -7,8 +7,6 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.Locale;
-
 public class File_handling{
     //todo add stuff for File handling
     //reads out a file and returns its content as a string
