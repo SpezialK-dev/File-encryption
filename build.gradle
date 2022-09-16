@@ -10,10 +10,14 @@ mainClassName = 'Encyptor.Main'
 repositories {
     mavenCentral()
 }
+configurations{
+
+}
+
 
 dependencies {
     testImplementation     'junit:junit:4.13'
-    implementation "io.github.spair:imgui-java-app:1.86.4"
+    implementation          'io.github.spair:imgui-java-app:1.86.4'
 }
 jar {
     manifest {
@@ -21,4 +25,5 @@ jar {
                 'Main-Class': 'Encyptor.Main'
         )
     }
+
 }
