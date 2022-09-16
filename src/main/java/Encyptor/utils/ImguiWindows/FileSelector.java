@@ -1,4 +1,4 @@
-package Encyptor;
+package Encyptor.utils.ImguiWindows;
 
 import imgui.ImGui;
 import imgui.flag.ImGuiWindowFlags;

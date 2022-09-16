@@ -1,6 +1,8 @@
 package Encyptor;
 
 import Encyptor.cipher.Output;
+import Encyptor.utils.ImguiWindows.DevWindow;
+import Encyptor.utils.ImguiWindows.FileSelector;
 import imgui.flag.ImGuiWindowFlags;
 import imgui.type.ImBoolean;
 import imgui.type.ImString;
@@ -22,36 +24,49 @@ import static Encyptor.cipher.EncAndDec.encryptedFile;
 
 
 public class Gui extends Application{
-    //all the Variables for settings
-    ImGui gui = new ImGui();
-    FileSelector f = new FileSelector();
-    //this is the window for all the encryption stuff
-
     //settingsMenu Variables
     boolean deleteConfAfterUsage = false;
     boolean deleteFileAfterusage = false;
-
     boolean show_hidden_files_Files_Selector = false;
+    boolean clear_values_after_usage = false;
+    boolean dev_mode_check = false;
+    boolean disable_logging_to_Consol = false;
+
+    //all the Variables for settings
+    ImGui gui = new ImGui();
+    FileSelector f = new FileSelector();
+
+    DevWindow devWindow = new DevWindow(disable_logging_to_Consol);
+    //this is the window for all the encryption stuff
+
+
 
     //EncryptionWindow Variables
     boolean fileOpenerHasbeenOpenENC = false;
     ImString encPswdWindow = new ImString("password",256);
 
-    //the current path to the File
-    String currentFilepath = null;
+    //the current path to the File for ENC
+    String currentFilepathENC = null;
 
     //the output of the File might need to be replaced
     private Output out ;
 
     //decryptionWindow Variables
-
+    String currentFilepathDEC = null;
+    boolean fileOpenerHasbeenOpenDEC = false;
     //the Password
     ImString dec_Psw_Window = new ImString("password", 256);
     //the salt value
     ImString dec_Salt_Window = new ImString("", 768);
-
     //iv
     ImString dec_IV_Window = new ImString("", 250);
+    //end decryptionWindow Variables
+
+
+    //debug Variables
+
+
+    //end Debug variables
 
     @Override
     protected void configure(Configuration config) {
@@ -65,14 +80,29 @@ public class Gui extends Application{
         decryptionWindow();
         settingsMenu();
 
+
         //the current way to implement this bc closing a window does not work that well
         if(fileOpenerHasbeenOpenENC){
             String s = f.openFileDialog("");
             if(s != null){
                 //selects the File and closes the Gui
-                currentFilepath = s;
+                currentFilepathENC = s;
                 fileOpenerHasbeenOpenENC = !fileOpenerHasbeenOpenENC;
             }
+        }
+        //file dialog for the decryption window
+        if(fileOpenerHasbeenOpenDEC){
+            String s = f.openFileDialog("");
+            if(s != null){
+                //selects the File and closes the Gui
+                currentFilepathDEC = s;
+                fileOpenerHasbeenOpenDEC = !fileOpenerHasbeenOpenDEC;
+            }
+        }
+        //dev mode
+        if(dev_mode_check){
+            devWindow.dev_mode_Window();
+
         }
 
     }
@@ -95,12 +125,12 @@ public class Gui extends Application{
             ImGui.endMenuBar();
             if(ImGui.button("Encrypt")){
                 //tests if the password field is empty
-                if(encPswdWindow.get().trim().length() == 0 || currentFilepath == null){
+                if(encPswdWindow.get().trim().length() == 0 || currentFilepathENC == null){
                     System.out.println("No password was entered or you didn't select a File!");
                 }else{
                     char[] char_Password_Arr = encPswdWindow.get().toCharArray();
                     try {
-                        out = encryptedFile(char_Password_Arr, currentFilepath, currentFilepath + ".enc", saltGen());
+                        out = encryptedFile(char_Password_Arr, currentFilepathENC, currentFilepathENC + ".enc", saltGen());
                         //todo make this into a single line that catches all of the statements
                     }catch (NoSuchPaddingException e) {
                         throw new RuntimeException(e);
@@ -120,7 +150,7 @@ public class Gui extends Application{
                         throw new RuntimeException(e);
                     }
                     if(deleteFileAfterusage){
-                        System.out.println("deleted File at: " + currentFilepath);
+                        System.out.println("deleted File at: " + currentFilepathENC);
                         //todo add the actual removal of the File
                     }
                 }
@@ -150,9 +180,9 @@ public class Gui extends Application{
             //begin Drop down menu
             if (ImGui.beginMenu( "File")) {
                 if (ImGui.menuItem("Open..", "Ctrl+O")) {
-                    fileOpenerHasbeenOpenENC =!fileOpenerHasbeenOpenENC; }
+                    fileOpenerHasbeenOpenDEC =!fileOpenerHasbeenOpenDEC; }
                 if (ImGui.menuItem("Close", "Ctrl+W")) {
-                    fileOpenerHasbeenOpenENC =!fileOpenerHasbeenOpenENC;
+                    fileOpenerHasbeenOpenDEC =!fileOpenerHasbeenOpenDEC;
                 }
                 ImGui.endMenu();
                 //end Drop Down menu
@@ -162,14 +192,14 @@ public class Gui extends Application{
             if(ImGui.button("decrypt")){
                 //todo write code for decryption
                 //to check that it is none null
-                if(dec_Psw_Window.get().trim().length() != 0  && dec_Psw_Window.get().trim().length() != 0  && dec_IV_Window.get().trim().length() != 0){
-                    System.out.println("all Fields were filled!");
+                if(dec_Psw_Window.get().trim().length() != 0  && dec_Psw_Window.get().trim().length() != 0  && dec_IV_Window.get().trim().length() != 0 && currentFilepathDEC != null){
+                    System.out.println("all Fields were filled! and a file was selected");
 
                 }
             }
             if(ImGui.button("Open File selector")){
                 //todo maybe replace this with some different variables
-                fileOpenerHasbeenOpenENC =!fileOpenerHasbeenOpenENC;
+                fileOpenerHasbeenOpenDEC =!fileOpenerHasbeenOpenDEC;
             }
 
             //the Password field
@@ -206,10 +236,16 @@ public class Gui extends Application{
         if(ImGui.checkbox("Show Hidden Files in File Selector", show_hidden_files_Files_Selector)){
             show_hidden_files_Files_Selector = !show_hidden_files_Files_Selector;
         }
+        if(ImGui.checkbox("clear En /-Decryption values after usage",clear_values_after_usage)){
+            clear_values_after_usage = !clear_values_after_usage;
+        }if(ImGui.checkbox("Developer Mode",dev_mode_check )){
+            dev_mode_check = !dev_mode_check;
+        }
 
         ImGui.end();
 
     }
+
 
 
     // takes care of File selection

@@ -20,6 +20,9 @@ public class  Main {
     static File path_to_config_File = new File(config_dir + "config.conf");
     static Boolean launched_bool = false;
     public static void main(String[] args) {
+        for(String st: args){
+            System.out.println(st);
+        }
         System.out.println("!!DEVELOPMENT CONSOLE!!");
         System.out.println("\n\n\n");
         System.out.println("Code running on: " + os_info);
