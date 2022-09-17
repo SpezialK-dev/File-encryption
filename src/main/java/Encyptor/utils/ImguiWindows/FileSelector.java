@@ -8,6 +8,8 @@ import java.io.File;
 import java.util.regex.Pattern;
 
 public class FileSelector {
+
+    //uses DevWindow to display to console!!!
     //starts in the users home dir
     private String currentDir = System.getProperty("user.home");
     //all the arrays to remove amount of reads
@@ -25,7 +27,7 @@ public class FileSelector {
     if(fileOpenerHasbeenOpenENC){
             String s = f.openFileDialog("","");
             if(s != null){
-                System.out.println(s);//Optional if you want to debug
+
                 fileOpenerHasbeenOpenENC = !fileOpenerHasbeenOpenENC;
             }
         }
@@ -63,7 +65,6 @@ public class FileSelector {
                 selectedItem =0;
                 needsrefresh = true;
             }
-            //System.out.println(i);
         }
         ImGui.text("Current selected File: " + displaynames[selectedItem]);
 
