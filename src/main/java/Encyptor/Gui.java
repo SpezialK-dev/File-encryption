@@ -30,13 +30,13 @@ public class Gui extends Application{
     boolean show_hidden_files_Files_Selector = false;
     boolean clear_values_after_usage = false;
     boolean dev_mode_check = false;
-    boolean disable_logging_to_Consol = false;
+    static boolean disable_logging_to_Consol = false;
 
     //all the Variables for settings
     ImGui gui = new ImGui();
     FileSelector f = new FileSelector();
 
-    DevWindow devWindow = new DevWindow(disable_logging_to_Consol);
+    static DevWindow devWindow = new DevWindow();
     //this is the window for all the encryption stuff
 
 
@@ -126,7 +126,7 @@ public class Gui extends Application{
             if(ImGui.button("Encrypt")){
                 //tests if the password field is empty
                 if(encPswdWindow.get().trim().length() == 0 || currentFilepathENC == null){
-                    devWindow.write_to_console("No password was entered or you didn't select a File!");
+                    Main.write_to_console("No password was entered or you didn't select a File!");
                 }else{
                     char[] char_Password_Arr = encPswdWindow.get().toCharArray();
                     try {
@@ -150,7 +150,7 @@ public class Gui extends Application{
                         throw new RuntimeException(e);
                     }
                     if(deleteFileAfterusage){
-                        devWindow.write_to_console("deleted File at: " + currentFilepathENC);
+                        Main.write_to_console("deleted File at: " + currentFilepathENC);
                         //todo add the actual removal of the File
                     }
                 }
@@ -192,7 +192,7 @@ public class Gui extends Application{
                 //todo write code for decryption
                 //to check that it is none null
                 if(dec_Psw_Window.get().trim().length() != 0  && dec_Psw_Window.get().trim().length() != 0  && dec_IV_Window.get().trim().length() != 0 && currentFilepathDEC != null){
-                    devWindow.write_to_console("all Fields were filled! and a file was selected");
+                    Main.write_to_console("all Fields were filled! and a file was selected");
 
                 }
             }
@@ -228,7 +228,7 @@ public class Gui extends Application{
         //Imgui checkboxes are just a fancy button they only detect the state change and nothing else, so you have to treat them as if they were a button
         if (ImGui.checkbox("Delete Config after usage", deleteConfAfterUsage)){
             deleteConfAfterUsage = !deleteConfAfterUsage;
-            devWindow.write_to_console("updated : deleteConfAfterUsage to " +  deleteConfAfterUsage);
+            Main.write_to_console("updated deleteConfAfterUsage to: " + deleteConfAfterUsage);
         }
         if(ImGui.checkbox("Delete File after usage", deleteFileAfterusage)){
             deleteFileAfterusage = !deleteFileAfterusage;
@@ -242,7 +242,7 @@ public class Gui extends Application{
             dev_mode_check = !dev_mode_check;
         }if(ImGui.checkbox("Disable Logging to console",disable_logging_to_Consol )){
             disable_logging_to_Consol = !disable_logging_to_Consol;
-            devWindow.update_Logging_to_console_Boolean(disable_logging_to_Consol);
+            Main.update_Logging_to_console_Boolean(disable_logging_to_Consol);
         }
 
 
@@ -269,4 +269,8 @@ public class Gui extends Application{
         sr.nextBytes(bytes);
         return bytes;
     }
+    public static DevWindow getDevWindow() {
+        return devWindow;
+    }
+
 }

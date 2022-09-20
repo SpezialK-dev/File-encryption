@@ -1,5 +1,6 @@
 package Encyptor.utils.ImguiWindows;
 
+import Encyptor.Main;
 import imgui.ImGui;
 import imgui.flag.ImGuiWindowFlags;
 import imgui.type.ImBoolean;
@@ -8,44 +9,22 @@ import imgui.type.ImInt;
 import java.util.ArrayList;
 
 public class DevWindow {
-    //if this program should write to console
-    Boolean log_to_Konsol = false;
-    ArrayList<String> console_log = new ArrayList<>();
+    //this is a wrapper for an array to display an array
 
-    public DevWindow(Boolean logging_to_Konsol){
-        log_to_Konsol = logging_to_Konsol;
+
+    public DevWindow(){
+
     }
     //main window to be called
     public void dev_mode_Window(){
         ImBoolean pOpen = new ImBoolean(true);
         ImGui.begin("DEVELOPMENT",pOpen, ImGuiWindowFlags.NoCollapse);
-        ImGui.listBox(": Console Log ",new ImInt(0), console_log.toArray(new String[console_log.size()])  );
-
-        /*
-        todo implement the following
-         - a console
-         - showing all internal variables via reflection
-         */
+        ImGui.listBox(": Console Log ",new ImInt(0), Main.get_consol_log() );
         if(ImGui.button("clear Console:")){
-            clear_console();
+            Main.clear_console();
 
         }
         ImGui.end();
     }
-    //methods to interact with the class
-    public void write_to_console(String input){
-        if(!log_to_Konsol){
-            console_log.add(input);
-            System.out.println("added |" + input + "| to console log" );
-        }
-    }
-    public void clear_console(){
-        console_log.clear();
-    }
-    public void update_Logging_to_console_Boolean(Boolean updated_Value){
-        log_to_Konsol = updated_Value;
-    }
-
-    //local methods
 
 }

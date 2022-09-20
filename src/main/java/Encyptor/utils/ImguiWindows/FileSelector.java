@@ -1,5 +1,7 @@
 package Encyptor.utils.ImguiWindows;
 
+import Encyptor.Gui;
+import Encyptor.Main;
 import imgui.ImGui;
 import imgui.flag.ImGuiWindowFlags;
 import imgui.type.*;
@@ -11,6 +13,7 @@ public class FileSelector {
 
     //uses DevWindow to display to console!!!
     //starts in the users home dir
+    DevWindow devWindow = Gui.getDevWindow();
     private String currentDir = System.getProperty("user.home");
     //all the arrays to remove amount of reads
     private File[] filesListing =null;
@@ -45,7 +48,7 @@ public class FileSelector {
             filesListing = ls(currentDir);//gets all the files in my current home dir(just debug currently)
             displaynames = convertFileToString(filesListing);
             needsrefresh =false;
-            System.out.println("refreshed Dirs");
+            Main.write_to_console("refreshed Dirs");
         }
         //shows the full path of the dir we are currently in
         /*//todo write this so that it shows the current path as a editable string
@@ -73,20 +76,20 @@ public class FileSelector {
             //todo add different os root dirs
              String[] pathdev = currentDir.split(Pattern.quote("/"));
              if(pathdev.length == 0){
-                System.out.println("You have reached a root directory");
+                 Main.write_to_console("You have reached a root directory");
                 //todo write a pop up
              }else {
                  //removes one the last dir and removes
                  pathdev[pathdev.length - 1] = "";
                  //todo remove the first part of the array because 0 !!!works currently under Linux
-                 String out = "";
+                 StringBuilder out = new StringBuilder();
                  //combines all of strings
                  for (String tempS : pathdev) {
-                     out = out + "/" + tempS;
+                     out.append("/").append(tempS);
                  }
                  //to actually refresh the page
                  needsrefresh =true;
-                 currentDir = out;
+                 currentDir = out.toString();
              }
         }
         //ImGui.text("Selected Item: " + testAr[selectedItem]);
@@ -97,7 +100,7 @@ public class FileSelector {
                         ImGui.end();
                 return returnValue;
             }else{
-                System.out.println("No File selected");
+                Main.write_to_console("No File selected");
             }
 
         }

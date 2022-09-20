@@ -16,7 +16,6 @@ public class File_handling{
     }
     //writes a String into a file
     public static void StringWriter(String input, String Filepath) throws IOException {
-        File outFile = new File(Filepath);
         BufferedWriter outWriter = new BufferedWriter(new FileWriter(Filepath));
         outWriter.write(input);
         outWriter.close();
