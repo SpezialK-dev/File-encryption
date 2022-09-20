@@ -32,6 +32,8 @@ public class Gui extends Application{
     boolean dev_mode_check = false;
     static boolean disable_logging_to_Consol = false;
 
+    int[] test = new int[100];
+
     //all the Variables for settings
     ImGui gui = new ImGui();
     FileSelector f = new FileSelector();
@@ -232,18 +234,37 @@ public class Gui extends Application{
         }
         if(ImGui.checkbox("Delete File after usage", deleteFileAfterusage)){
             deleteFileAfterusage = !deleteFileAfterusage;
+            Main.write_to_console("updated deleteFileAfterusage to: " + deleteFileAfterusage);
+
         }
         if(ImGui.checkbox("Show Hidden Files in File Selector", show_hidden_files_Files_Selector)){
             show_hidden_files_Files_Selector = !show_hidden_files_Files_Selector;
+            Main.write_to_console("updated show_hidden_files_Files_Selector to: " + show_hidden_files_Files_Selector);
+
         }
         if(ImGui.checkbox("clear En /-Decryption values after usage",clear_values_after_usage)){
             clear_values_after_usage = !clear_values_after_usage;
+            Main.write_to_console("updated clear_values_after_usage to: " + clear_values_after_usage);
+
         }if(ImGui.checkbox("Developer Mode",dev_mode_check )){
             dev_mode_check = !dev_mode_check;
+            Main.write_to_console("updated dev_mode_check to: " + dev_mode_check);
+
         }if(ImGui.checkbox("Disable Logging to console",disable_logging_to_Consol )){
             disable_logging_to_Consol = !disable_logging_to_Consol;
+            Main.write_to_console("updated disable_logging_to_Consol to: " + disable_logging_to_Consol);
             Main.update_Logging_to_console_Boolean(disable_logging_to_Consol);
         }
+        if(ImGui.sliderInt("max Amount lines ",test, 100,1000 )){
+            //checks and updates the value of the max amounts of lines
+            for(int i: test){
+                if(i != 0){
+                    Main.setConsol_lenght(i);
+                }
+
+            }
+        }
+
 
 
         ImGui.end();

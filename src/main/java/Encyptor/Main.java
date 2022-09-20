@@ -15,6 +15,8 @@ public class  Main {
     //error handling for the new Gui
     static Boolean log_to_Konsol = false;
     static ArrayList<String> console_log = new ArrayList<>();
+    //max amount of commands send to console
+    static int consol_lenght = 100;
     //what launch option is selected
     final static String os_info = System.getProperty("os.name").toLowerCase().trim();
     //depending on how many options we will have we might have to create a hashmap with options
@@ -93,5 +95,11 @@ public class  Main {
     //interaction
     public static Boolean getLog_to_Konsol(){
         return log_to_Konsol;
+    }
+    public static int getConsol_lenght() {
+        return consol_lenght;
+    }
+    public static void setConsol_lenght(int consol_lenght) {
+        Main.consol_lenght = consol_lenght;
     }
 }
