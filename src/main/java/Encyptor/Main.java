@@ -26,14 +26,13 @@ public class  Main {
         for(String st: args){
             System.out.println(st);
         }
-        write_to_console("!!DEVELOPMENT CONSOLE!!");
         write_to_console("Code running on: " + os_info);
 
         //checks for existence
         if(!path_to_config_File.isFile()){
-            write_to_console("config FIle does not exist:");
+            write_to_console("config file does not exist:");
         }else{
-            write_to_console("File found");
+            write_to_console("config file found");
             //reads the file
             String out_from_File_in;
             try {
@@ -41,7 +40,7 @@ public class  Main {
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
-            write_to_console("What was found in the file: " + out_from_File_in);
+            write_to_console("text from config file: \n" + out_from_File_in);
             launch_option = Integer.parseInt(out_from_File_in.trim());
         }
 
