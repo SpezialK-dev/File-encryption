@@ -19,6 +19,7 @@ import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 import java.security.spec.InvalidKeySpecException;
 import java.security.spec.InvalidParameterSpecException;
+import java.util.regex.Pattern;
 
 import static Encyptor.cipher.EncAndDec.encryptedFile;
 
@@ -193,9 +194,17 @@ public class Gui extends Application{
             if(ImGui.button("decrypt")){
                 //todo write code for decryption
                 //to check that it is none null
-                if(dec_Psw_Window.get().trim().length() != 0  && dec_Psw_Window.get().trim().length() != 0  && dec_IV_Window.get().trim().length() != 0 && currentFilepathDEC != null){
+                if(dec_Psw_Window.get().trim().length() != 0  && dec_Salt_Window.get().trim().length() != 0  && dec_IV_Window.get().trim().length() != 0 && currentFilepathDEC != null){
                     Main.write_to_console("all Fields were filled! and a file was selected");
+                    //code for salt
+                    String salt_Value= dec_Salt_Window.get().trim();
 
+
+                    //code for password
+                    String password_Value = dec_Psw_Window.get().trim();
+
+                    //code for IV
+                    String iv_value = dec_IV_Window.get().trim();
                 }
             }
             if(ImGui.button("Open File selector")){
@@ -292,6 +301,18 @@ public class Gui extends Application{
     }
     public static DevWindow getDevWindow() {
         return devWindow;
+    }
+    //code to convert the String value from some inputs to a byte array
+    public byte[] StringToByteArray(String inputString) {
+        inputString = inputString.replaceAll(" ", "");
+        String[] split2 = inputString.split(Pattern.quote(","));
+        byte[] bytes = new byte[split2.length];
+
+        for (int i = 0; i < split2.length; i++) {
+            bytes[i] = Byte.parseByte(split2[i]);
+        }
+
+        return bytes;
     }
 
 }

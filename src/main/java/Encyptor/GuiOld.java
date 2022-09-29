@@ -569,7 +569,7 @@ public class GuiOld extends Main implements ActionListener {
         UI.put("Panel.background", background);
         UI.put("setForeground", foreground);
     }
-    //this should remove add all of the default items to the panel
+    //this should remove add all the default items to the panel
     private void addDefaultPanelItems(){
         panel.add(IVL1);
         panel.add(decryptFileName);
