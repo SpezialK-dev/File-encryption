@@ -27,6 +27,8 @@ import static Encyptor.cipher.EncAndDec.encryptedFile;
 public class Gui extends Application{
     //settingsMenu Variables
     boolean deleteConfAfterUsage = false;
+    boolean transferDataToDecrypt = false;
+    boolean cleanDataAfterEnc = true;
     boolean deleteFileAfterusage = false;
     boolean show_hidden_files_Files_Selector = false;
     boolean clear_values_after_usage = false;
@@ -134,22 +136,11 @@ public class Gui extends Application{
                     char[] char_Password_Arr = encPswdWindow.get().toCharArray();
                     try {
                         out = encryptedFile(char_Password_Arr, currentFilepathENC, currentFilepathENC + ".enc", saltGen());
-                        //todo make this into a single line that catches all of the statements
-                    }catch (NoSuchPaddingException e) {
-                        throw new RuntimeException(e);
-                    } catch (IllegalBlockSizeException e) {
-                        throw new RuntimeException(e);
-                    } catch (NoSuchAlgorithmException e) {
-                        throw new RuntimeException(e);
-                    } catch (IOException e) {
-                        throw new RuntimeException(e);
-                    } catch (BadPaddingException e) {
-                        throw new RuntimeException(e);
-                    } catch (InvalidKeySpecException e) {
-                        throw new RuntimeException(e);
-                    } catch (InvalidParameterSpecException e) {
-                        throw new RuntimeException(e);
-                    } catch (InvalidKeyException e) {
+                        if(cleanDataAfterEnc){
+                            //this SHOULD clean out the data and set the value to null and override it in memory!!
+                            out = null;
+                        }
+                    }catch (InvalidKeyException | InvalidParameterSpecException | InvalidKeySpecException  | BadPaddingException | NoSuchPaddingException | IllegalBlockSizeException | NoSuchAlgorithmException | IOException e) {
                         throw new RuntimeException(e);
                     }
                     if(deleteFileAfterusage){
@@ -199,12 +190,13 @@ public class Gui extends Application{
                     //code for salt
                     String salt_Value= dec_Salt_Window.get().trim();
 
-
-                    //code for password
-                    String password_Value = dec_Psw_Window.get().trim();
-
                     //code for IV
                     String iv_value = dec_IV_Window.get().trim();
+
+                    //code for password
+                    char[] password_Value = dec_Psw_Window.get().trim().toCharArray();
+
+
                 }
             }
             if(ImGui.button("Open File selector")){
@@ -263,6 +255,21 @@ public class Gui extends Application{
             disable_logging_to_Consol = !disable_logging_to_Consol;
             Main.write_to_console("updated disable_logging_to_Consol to: " + disable_logging_to_Consol);
             Main.update_Logging_to_console_Boolean(disable_logging_to_Consol);
+
+        }if(ImGui.checkbox("transfer data to decryption",transferDataToDecrypt )){
+            if(cleanDataAfterEnc){
+                Main.write_to_console("NO UPDATE TO transferDataToDecrypt BECAUSE cleaned Data");
+            }else {
+                transferDataToDecrypt = !transferDataToDecrypt;
+                Main.write_to_console("updated dev_mode_check to: " + transferDataToDecrypt);
+            }
+
+        }if(ImGui.checkbox("clean Data after encryption",cleanDataAfterEnc )){
+            cleanDataAfterEnc = !cleanDataAfterEnc;
+            if(cleanDataAfterEnc){
+                transferDataToDecrypt = false;
+            }
+            Main.write_to_console("updated dev_mode_check to: " + cleanDataAfterEnc + "\n update to transferDataToDecrypt aswell : " +transferDataToDecrypt );
         }
         if(ImGui.sliderInt("max Amount lines ",test, 100,1000 )){
             //checks and updates the value of the max amounts of lines
