@@ -11,9 +11,7 @@ import java.util.ArrayList;
 public class DevWindow {
     //this is a wrapper for an array to display an array
     int console_lenght = 100;
-
     public DevWindow(){
-
     }
     //main window to be called
     public void dev_mode_Window(){
@@ -29,7 +27,6 @@ public class DevWindow {
         if(ImGui.button("clear Console:")){
             Main.clear_console();
             Main.write_to_console("cleared console");
-
         }
         ImGui.end();
         //there to clean console when exceeded length
@@ -37,5 +34,4 @@ public class DevWindow {
             Main.clear_console();
         }
     }
-
 }

@@ -103,6 +103,8 @@ public class Gui extends Application{
                 currentFilepathDEC = s;
                 fileOpenerHasbeenOpenDEC = !fileOpenerHasbeenOpenDEC;
             }
+            //todo add a general way of doing this instead of having an individual one for every time used
+
         }
         //dev mode
         if(dev_mode_check){
@@ -140,6 +142,9 @@ public class Gui extends Application{
                             //this SHOULD clean out the data and set the value to null and override it in memory!!
                             out = null;
                         }
+                        if(transferDataToDecrypt){
+                            //todo add code to transfer data to dec
+                        }
                     }catch (InvalidKeyException | InvalidParameterSpecException | InvalidKeySpecException  | BadPaddingException | NoSuchPaddingException | IllegalBlockSizeException | NoSuchAlgorithmException | IOException e) {
                         throw new RuntimeException(e);
                     }
@@ -147,6 +152,7 @@ public class Gui extends Application{
                         Main.write_to_console("deleted File at: " + currentFilepathENC);
                         //todo add the actual removal of the File
                     }
+
                 }
 
             }
@@ -189,9 +195,15 @@ public class Gui extends Application{
                     Main.write_to_console("all Fields were filled! and a file was selected");
                     //code for salt
                     String salt_Value= dec_Salt_Window.get().trim();
+                    //replacing all the values that come from importing //TODO place at import
+                    salt_Value = salt_Value.replaceAll(Pattern.quote("["),"");
+                    salt_Value = salt_Value.replaceAll(Pattern.quote("]"),"");
 
                     //code for IV
                     String iv_value = dec_IV_Window.get().trim();
+                    iv_value = iv_value.replaceAll(Pattern.quote("["),"");
+                    iv_value = iv_value.replaceAll(Pattern.quote("]"),"");
+
 
                     //code for password
                     char[] password_Value = dec_Psw_Window.get().trim().toCharArray();
@@ -217,7 +229,13 @@ public class Gui extends Application{
 
             }
             if(ImGui.button("Import Settings")){
+                //todo add code to import settings and clear the import stuff
 
+                //file chooser
+
+                // read all the files
+
+                // set it to the string
             }
 
         }
@@ -277,17 +295,12 @@ public class Gui extends Application{
                 if(i != 0){
                     Main.setConsol_lenght(i);
                 }
-
             }
         }
-
-
 
         ImGui.end();
 
     }
-
-
 
     // takes care of File selection
     private void fileOpend(String filenameAndPath){
@@ -321,5 +334,11 @@ public class Gui extends Application{
 
         return bytes;
     }
-
+    //methode to remove all brackets from arrays to display them properly in a better looking way
+    private String removeBracketsFromString(String input){
+        input = input.replaceAll(Pattern.quote("["),"");
+        input = input.replaceAll(Pattern.quote("]"),"");
+        return input;
+    }
+    //class
 }
