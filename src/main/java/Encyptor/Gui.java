@@ -25,6 +25,8 @@ import static Encyptor.cipher.EncAndDec.encryptedFile;
 
 
 public class Gui extends Application{
+    //this is the variable that will be used to decide
+    final String string_for_file_manager = "Waiting to Select File";
     //settingsMenu Variables
     boolean deleteConfAfterUsage = false;
     boolean deleteFileAfterusage = false;
@@ -45,7 +47,7 @@ public class Gui extends Application{
 
 
     //EncryptionWindow Variables
-    boolean fileOpenerHasbeenOpenENC = false;
+
     ImString encPswdWindow = new ImString("password",256);
 
     //the current path to the File for ENC
@@ -56,7 +58,6 @@ public class Gui extends Application{
 
     //decryptionWindow Variables
     String currentFilepathDEC = null;
-    boolean fileOpenerHasbeenOpenDEC = false;
     //the Password
     ImString dec_Psw_Window = new ImString("password", 256);
     //the salt value
@@ -89,30 +90,30 @@ public class Gui extends Application{
 
 
         //the current way to implement this bc closing a window does not work that well
-        if(fileOpenerHasbeenOpenENC){
+        if(currentFilepathENC == string_for_file_manager){
             String s = f.openFileDialog("");
             if(s != null){
                 //selects the File and closes the Gui
                 currentFilepathENC = s;
-                fileOpenerHasbeenOpenENC = !fileOpenerHasbeenOpenENC;
+                Main.write_to_console("selected File: " + currentFilepathDEC);
             }
         }
         //file dialog for the decryption window
-        if(fileOpenerHasbeenOpenDEC){
+        if(currentFilepathDEC == string_for_file_manager){
             String s = f.openFileDialog("");
             if(s != null){
                 //selects the File and closes the Gui
                 currentFilepathDEC = s;
-                fileOpenerHasbeenOpenDEC = !fileOpenerHasbeenOpenDEC;
+                Main.write_to_console("selected File: " +currentFilepathDEC);
             }
         }
 
-        if(pathToConfig == "ToBeChanged"){
+        if(pathToConfig == string_for_file_manager){
             String s = f.openFileDialog("");
             if(s != null){
                 //selects the File and closes the Gui
                 pathToConfig = s;
-                Main.write_to_console(pathToConfig);
+                Main.write_to_console("selected File: " +pathToConfig);
             }
         }
         //dev mode
@@ -131,16 +132,16 @@ public class Gui extends Application{
             //begin drop down menu
             if (ImGui.beginMenu( "File")) {
                 if (ImGui.menuItem("Open..", "Ctrl+O")) {
-                    fileOpenerHasbeenOpenENC = !fileOpenerHasbeenOpenENC; }
-                if(ImGui.menuItem("Close", "Ctrl+W")) {
-                    fileOpenerHasbeenOpenENC = !fileOpenerHasbeenOpenENC;
-                }
+                    currentFilepathENC = string_for_file_manager; }
+
                 //end Drop down menu
                 ImGui.endMenu();
             }
             ImGui.endMenuBar();
+            ImGui.text("Current Selected File: " + currentFilepathENC);
             if(ImGui.button("Encrypt")){
                 //tests if the password field is empty
+                //this might need to include to test if we have a file selector open at the moment
                 if(encPswdWindow.get().trim().length() == 0 || currentFilepathENC == null){
                     Main.write_to_console("No password was entered or you didn't select a File!");
                 }else{
@@ -173,7 +174,7 @@ public class Gui extends Application{
 
             }
             if(ImGui.button("Open File selector")){
-                fileOpenerHasbeenOpenENC =!fileOpenerHasbeenOpenENC;
+                currentFilepathENC = string_for_file_manager;
             }
             //ImGuiInputTextFlags.Password maybe just add to the end of the line to hide password
             if(ImGui.inputTextMultiline(": Password", encPswdWindow,200, 20)){
@@ -195,18 +196,22 @@ public class Gui extends Application{
             //begin Drop down menu
             if (ImGui.beginMenu( "File")) {
                 if (ImGui.menuItem("Open..", "Ctrl+O")) {
-                    fileOpenerHasbeenOpenDEC =!fileOpenerHasbeenOpenDEC; }
-                if (ImGui.menuItem("Close", "Ctrl+W")) {
-                    fileOpenerHasbeenOpenDEC =!fileOpenerHasbeenOpenDEC;
+                    currentFilepathDEC = string_for_file_manager;
                 }
+
                 ImGui.endMenu();
                 //end Drop Down menu
             }
             ImGui.endMenuBar();
             //end menubar
+
+            //shows the currently selected File
+            ImGui.text("Current Selected File: " + currentFilepathDEC);
+
             if(ImGui.button("decrypt")){
                 //todo write code for decryption
                 //to check that it is none null
+                //this might need to include to test if we have a file selector open at the moment
                 if(dec_Psw_Window.get().trim().length() != 0  && dec_Salt_Window.get().trim().length() != 0  && dec_IV_Window.get().trim().length() != 0 && currentFilepathDEC != null){
                     Main.write_to_console("all Fields were filled! and a file was selected");
                     //code for salt
@@ -222,7 +227,7 @@ public class Gui extends Application{
             }
             if(ImGui.button("Open File selector")){
                 //todo maybe replace this with some different variables
-                fileOpenerHasbeenOpenDEC =!fileOpenerHasbeenOpenDEC;
+                currentFilepathDEC = string_for_file_manager;
             }
 
             //the Password field
@@ -238,7 +243,7 @@ public class Gui extends Application{
 
             }
             if(ImGui.button("Import Settings")){
-                pathToConfig = "ToBeChanged";
+                pathToConfig = string_for_file_manager;
                 Main.write_to_console("Imported Settings from"+ "Coming Soon!!");
                 //todo add code to import settings
             }
