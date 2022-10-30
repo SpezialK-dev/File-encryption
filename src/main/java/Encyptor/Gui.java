@@ -27,8 +27,6 @@ import static Encyptor.cipher.EncAndDec.encryptedFile;
 public class Gui extends Application{
     //settingsMenu Variables
     boolean deleteConfAfterUsage = false;
-    boolean transferDataToDecrypt = false;
-    boolean cleanDataAfterEnc = true;
     boolean deleteFileAfterusage = false;
     boolean show_hidden_files_Files_Selector = false;
     boolean clear_values_after_usage = false;
@@ -65,7 +63,11 @@ public class Gui extends Application{
     ImString dec_Salt_Window = new ImString("", 768);
     //iv
     ImString dec_IV_Window = new ImString("", 250);
+
+    //this is the path to load a config with
+    String pathToConfig = null;
     //end decryptionWindow Variables
+
 
 
     //debug Variables
@@ -103,8 +105,15 @@ public class Gui extends Application{
                 currentFilepathDEC = s;
                 fileOpenerHasbeenOpenDEC = !fileOpenerHasbeenOpenDEC;
             }
-            //todo add a general way of doing this instead of having an individual one for every time used
+        }
 
+        if(pathToConfig == "ToBeChanged"){
+            String s = f.openFileDialog("");
+            if(s != null){
+                //selects the File and closes the Gui
+                pathToConfig = s;
+                Main.write_to_console(pathToConfig);
+            }
         }
         //dev mode
         if(dev_mode_check){
@@ -138,21 +147,28 @@ public class Gui extends Application{
                     char[] char_Password_Arr = encPswdWindow.get().toCharArray();
                     try {
                         out = encryptedFile(char_Password_Arr, currentFilepathENC, currentFilepathENC + ".enc", saltGen());
-                        if(cleanDataAfterEnc){
-                            //this SHOULD clean out the data and set the value to null and override it in memory!!
-                            out = null;
-                        }
-                        if(transferDataToDecrypt){
-                            //todo add code to transfer data to dec
-                        }
-                    }catch (InvalidKeyException | InvalidParameterSpecException | InvalidKeySpecException  | BadPaddingException | NoSuchPaddingException | IllegalBlockSizeException | NoSuchAlgorithmException | IOException e) {
+                        //todo make this into a single line that catches all of the statements
+                    }catch (NoSuchPaddingException e) {
+                        throw new RuntimeException(e);
+                    } catch (IllegalBlockSizeException e) {
+                        throw new RuntimeException(e);
+                    } catch (NoSuchAlgorithmException e) {
+                        throw new RuntimeException(e);
+                    } catch (IOException e) {
+                        throw new RuntimeException(e);
+                    } catch (BadPaddingException e) {
+                        throw new RuntimeException(e);
+                    } catch (InvalidKeySpecException e) {
+                        throw new RuntimeException(e);
+                    } catch (InvalidParameterSpecException e) {
+                        throw new RuntimeException(e);
+                    } catch (InvalidKeyException e) {
                         throw new RuntimeException(e);
                     }
                     if(deleteFileAfterusage){
                         Main.write_to_console("deleted File at: " + currentFilepathENC);
                         //todo add the actual removal of the File
                     }
-
                 }
 
             }
@@ -195,20 +211,13 @@ public class Gui extends Application{
                     Main.write_to_console("all Fields were filled! and a file was selected");
                     //code for salt
                     String salt_Value= dec_Salt_Window.get().trim();
-                    //replacing all the values that come from importing //TODO place at import
-                    salt_Value = salt_Value.replaceAll(Pattern.quote("["),"");
-                    salt_Value = salt_Value.replaceAll(Pattern.quote("]"),"");
-
-                    //code for IV
-                    String iv_value = dec_IV_Window.get().trim();
-                    iv_value = iv_value.replaceAll(Pattern.quote("["),"");
-                    iv_value = iv_value.replaceAll(Pattern.quote("]"),"");
 
 
                     //code for password
-                    char[] password_Value = dec_Psw_Window.get().trim().toCharArray();
+                    String password_Value = dec_Psw_Window.get().trim();
 
-
+                    //code for IV
+                    String iv_value = dec_IV_Window.get().trim();
                 }
             }
             if(ImGui.button("Open File selector")){
@@ -229,13 +238,9 @@ public class Gui extends Application{
 
             }
             if(ImGui.button("Import Settings")){
-                //todo add code to import settings and clear the import stuff
-
-                //file chooser
-
-                // read all the files
-
-                // set it to the string
+                pathToConfig = "ToBeChanged";
+                Main.write_to_console("Imported Settings from"+ "Coming Soon!!");
+                //todo add code to import settings
             }
 
         }
@@ -273,21 +278,6 @@ public class Gui extends Application{
             disable_logging_to_Consol = !disable_logging_to_Consol;
             Main.write_to_console("updated disable_logging_to_Consol to: " + disable_logging_to_Consol);
             Main.update_Logging_to_console_Boolean(disable_logging_to_Consol);
-
-        }if(ImGui.checkbox("transfer data to decryption",transferDataToDecrypt )){
-            if(cleanDataAfterEnc){
-                Main.write_to_console("NO UPDATE TO transferDataToDecrypt BECAUSE cleaned Data");
-            }else {
-                transferDataToDecrypt = !transferDataToDecrypt;
-                Main.write_to_console("updated dev_mode_check to: " + transferDataToDecrypt);
-            }
-
-        }if(ImGui.checkbox("clean Data after encryption",cleanDataAfterEnc )){
-            cleanDataAfterEnc = !cleanDataAfterEnc;
-            if(cleanDataAfterEnc){
-                transferDataToDecrypt = false;
-            }
-            Main.write_to_console("updated dev_mode_check to: " + cleanDataAfterEnc + "\n update to transferDataToDecrypt aswell : " +transferDataToDecrypt );
         }
         if(ImGui.sliderInt("max Amount lines ",test, 100,1000 )){
             //checks and updates the value of the max amounts of lines
@@ -295,12 +285,17 @@ public class Gui extends Application{
                 if(i != 0){
                     Main.setConsol_lenght(i);
                 }
+
             }
         }
+
+
 
         ImGui.end();
 
     }
+
+
 
     // takes care of File selection
     private void fileOpend(String filenameAndPath){
@@ -334,11 +329,5 @@ public class Gui extends Application{
 
         return bytes;
     }
-    //methode to remove all brackets from arrays to display them properly in a better looking way
-    private String removeBracketsFromString(String input){
-        input = input.replaceAll(Pattern.quote("["),"");
-        input = input.replaceAll(Pattern.quote("]"),"");
-        return input;
-    }
-    //class
+
 }
