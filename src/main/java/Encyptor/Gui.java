@@ -9,11 +9,12 @@ import imgui.type.ImString;
 import imgui.ImGui;
 import imgui.app.Application;
 import imgui.app.Configuration;
-
 import javax.crypto.BadPaddingException;
 import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.NoSuchPaddingException;
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
@@ -21,6 +22,7 @@ import java.security.spec.InvalidKeySpecException;
 import java.security.spec.InvalidParameterSpecException;
 import java.util.regex.Pattern;
 
+import static Encyptor.cipher.EncAndDec.DecriptionFiles;
 import static Encyptor.cipher.EncAndDec.encryptedFile;
 
 
@@ -133,7 +135,6 @@ public class Gui extends Application{
             if (ImGui.beginMenu( "File")) {
                 if (ImGui.menuItem("Open..", "Ctrl+O")) {
                     currentFilepathENC = string_for_file_manager; }
-
                 //end Drop down menu
                 ImGui.endMenu();
             }
@@ -178,6 +179,7 @@ public class Gui extends Application{
             }
             //ImGuiInputTextFlags.Password maybe just add to the end of the line to hide password
             if(ImGui.inputTextMultiline(": Password", encPswdWindow,200, 20)){
+
             }
             if(ImGui.button("export Settings")){
 
@@ -214,15 +216,54 @@ public class Gui extends Application{
                 //this might need to include to test if we have a file selector open at the moment
                 if(dec_Psw_Window.get().trim().length() != 0  && dec_Salt_Window.get().trim().length() != 0  && dec_IV_Window.get().trim().length() != 0 && currentFilepathDEC != null){
                     Main.write_to_console("all Fields were filled! and a file was selected");
+                    /*
+                    creates a string variable and also clears the string variable for security reasons
+                    aswell as memory efficient
+                     */
+
                     //code for salt
                     String salt_Value= dec_Salt_Window.get().trim();
-
+                    byte[] salt_byte = StringToByteArray(salt_Value);
+                    salt_Value = null; //clears variable
 
                     //code for password
                     String password_Value = dec_Psw_Window.get().trim();
+                    char[] password_arr = password_Value.toCharArray();
+                    password_Value = null;
+
 
                     //code for IV
                     String iv_value = dec_IV_Window.get().trim();
+                    byte[] iv_byte = StringToByteArray(iv_value);
+                    iv_value = null;//clear value
+
+                    //code for ouput file
+                    String outdir = currentFilepathDEC.replace(".enc", "");
+
+                    // the actual decryption
+                    try{
+                        DecriptionFiles(password_arr,currentFilepathDEC,outdir,salt_byte, iv_byte);
+
+                    } catch (InvalidAlgorithmParameterException e) {
+                        throw new RuntimeException(e);
+                    } catch (FileNotFoundException e) {
+                        throw new RuntimeException(e);
+                    } catch (NoSuchPaddingException e) {
+                        throw new RuntimeException(e);
+                    } catch (IllegalBlockSizeException e) {
+                        throw new RuntimeException(e);
+                    } catch (NoSuchAlgorithmException e) {
+                        throw new RuntimeException(e);
+                    } catch (IOException e) {
+                        throw new RuntimeException(e);
+                    } catch (BadPaddingException e) {
+                        throw new RuntimeException(e);
+                    } catch (InvalidKeySpecException e) {
+                        throw new RuntimeException(e);
+                    } catch (InvalidKeyException e) {
+                        throw new RuntimeException(e);
+                    }
+
                 }
             }
             if(ImGui.button("Open File selector")){
@@ -294,12 +335,9 @@ public class Gui extends Application{
             }
         }
 
-
-
         ImGui.end();
 
     }
-
 
 
     // takes care of File selection
