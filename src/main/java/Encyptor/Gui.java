@@ -1,6 +1,7 @@
 package Encyptor;
 
 import Encyptor.cipher.Output;
+import Encyptor.utils.File_handling;
 import Encyptor.utils.ImguiWindows.DevWindow;
 import Encyptor.utils.ImguiWindows.FileSelector;
 import imgui.flag.ImGuiWindowFlags;
@@ -20,6 +21,7 @@ import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 import java.security.spec.InvalidKeySpecException;
 import java.security.spec.InvalidParameterSpecException;
+import java.util.Arrays;
 import java.util.regex.Pattern;
 
 import static Encyptor.cipher.EncAndDec.DecriptionFiles;
@@ -34,7 +36,7 @@ public class Gui extends Application{
     boolean deleteFileAfterusage = false;
     boolean show_hidden_files_Files_Selector = false;
     boolean clear_values_after_usage = false;
-    boolean dev_mode_check = false;
+    boolean dev_mode_check = true; //default false
     static boolean disable_logging_to_Consol = false;
 
     int[] test = new int[100];
@@ -46,8 +48,6 @@ public class Gui extends Application{
     static DevWindow devWindow = new DevWindow();
     //this is the window for all the encryption stuff
 
-
-
     //EncryptionWindow Variables
 
     ImString encPswdWindow = new ImString("password",256);
@@ -56,7 +56,7 @@ public class Gui extends Application{
     String currentFilepathENC = null;
 
     //the output of the File might need to be replaced
-    private Output out ;
+    private Output out = null;
 
     //decryptionWindow Variables
     String currentFilepathDEC = null;
@@ -70,8 +70,7 @@ public class Gui extends Application{
     //this is the path to load a config with
     String pathToConfig = null;
     //end decryptionWindow Variables
-
-
+    Boolean import_started = false;
 
     //debug Variables
 
@@ -124,6 +123,32 @@ public class Gui extends Application{
 
         }
 
+        //check for import window
+        if(import_started){
+            String outfileRead = "";
+            //checking so that a file is selected
+            if(pathToConfig != null && pathToConfig != string_for_file_manager){
+                Main.write_to_console("selected File test :" + pathToConfig);
+                Main.write_to_console("started reading File");
+                try{
+                    outfileRead = File_handling.readFile(pathToConfig);
+                    Main.write_to_console("read the file");
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+                Main.write_to_console("finished reading from file");
+                //
+                if(outfileRead != ""){
+                    Main.write_to_console("the input of the file: " + outfileRead);
+                    splitAndConvertandSetParameters(outfileRead);//should already set the variables at the right lication
+
+                    //ends this
+                    import_started= false;
+                }
+            }
+
+        }
+
     }
 
     //all the Methods for the different Windows
@@ -132,7 +157,7 @@ public class Gui extends Application{
         ImGui.begin("Encryption",pOpen,ImGuiWindowFlags.MenuBar );
         if (ImGui.beginMenuBar()) {
             //begin drop down menu
-            if (ImGui.beginMenu( "File")) {
+            if (ImGui.beginMenu( "F`il`e")) {
                 if (ImGui.menuItem("Open..", "Ctrl+O")) {
                     currentFilepathENC = string_for_file_manager; }
                 //end Drop down menu
@@ -181,8 +206,14 @@ public class Gui extends Application{
             if(ImGui.inputTextMultiline(": Password", encPswdWindow,200, 20)){
 
             }
-            if(ImGui.button("export Settings")){
+            if(ImGui.button("export Variables")){
+                if(out != null){//checks that there are things
+                    //creates the output string
+                    String export_settings_Str = encPswdWindow.get() + "|" + Arrays.toString(out.retSalt()) + "|" + Arrays.toString(out.retIv());
 
+
+                    //
+                }
             }
 
         }
@@ -241,26 +272,9 @@ public class Gui extends Application{
                     String outdir = currentFilepathDEC.replace(".enc", "");
 
                     // the actual decryption
-                    try{
-                        DecriptionFiles(password_arr,currentFilepathDEC,outdir,salt_byte, iv_byte);
-
-                    } catch (InvalidAlgorithmParameterException e) {
-                        throw new RuntimeException(e);
-                    } catch (FileNotFoundException e) {
-                        throw new RuntimeException(e);
-                    } catch (NoSuchPaddingException e) {
-                        throw new RuntimeException(e);
-                    } catch (IllegalBlockSizeException e) {
-                        throw new RuntimeException(e);
-                    } catch (NoSuchAlgorithmException e) {
-                        throw new RuntimeException(e);
-                    } catch (IOException e) {
-                        throw new RuntimeException(e);
-                    } catch (BadPaddingException e) {
-                        throw new RuntimeException(e);
-                    } catch (InvalidKeySpecException e) {
-                        throw new RuntimeException(e);
-                    } catch (InvalidKeyException e) {
+                    try {
+                        DecriptionFiles(password_arr, currentFilepathDEC, outdir, salt_byte, iv_byte);
+                    }catch (Exception e) {
                         throw new RuntimeException(e);
                     }
 
@@ -286,7 +300,7 @@ public class Gui extends Application{
             if(ImGui.button("Import Settings")){
                 pathToConfig = string_for_file_manager;
                 Main.write_to_console("Imported Settings from"+ "Coming Soon!!");
-                //todo add code to import settings
+                import_started = true;
             }
 
         }
@@ -340,10 +354,6 @@ public class Gui extends Application{
     }
 
 
-    // takes care of File selection
-    private void fileOpend(String filenameAndPath){
-        ImGui.text("CurrentFile Opened: ");
-    }
     //switches a boolean and then returns the switched version
     private byte[] saltGen() throws NoSuchAlgorithmException
     {
@@ -371,6 +381,33 @@ public class Gui extends Application{
         }
 
         return bytes;
+    }
+    //todo add the putting the Strings into the right variables
+    public void splitAndConvertandSetParameters(String inputString) {
+        String[] split1 = inputString.split(Pattern.quote("|"));//return the list with everything separated //have to do this because this uses regular expression so this means smt
+        //the only thing left is to convert the byte
+        //setting the password
+
+        //pswField.setText(split1[0]);
+
+        //converting these things to arrays and setting them appropriately
+        //so we remove all the brackets before we open this I can reuse the other part
+
+        String thissalt =  split1[1].replaceAll(Pattern.quote("]"),"");
+        thissalt =  thissalt.replaceAll(Pattern.quote("["),"");
+
+        //saltField.setText(thissalt);//spits out errors evn thought it whould work
+
+        //the same thing as abouve but for the IV
+        String thisiv =  split1[2].replaceAll(Pattern.quote("["),"");
+        thisiv =  thisiv.replaceAll(Pattern.quote("]"),"");
+
+        //ivField.setText(thisiv);
+
+        //ima just leave this here as a backup but this is not acutally need and could be removed
+
+        //curSalt = StringToByteArray(thissalt);
+        //curIV = StringToByteArray(thisiv);
     }
 
 }

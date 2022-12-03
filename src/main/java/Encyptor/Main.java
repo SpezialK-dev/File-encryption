@@ -11,7 +11,6 @@ import static imgui.app.Application.launch;
 
 
 public class  Main {
-    //todo maybe put the creation of the Dev window here into main so that I can inherit it to other classes via the constructor not optimal but possible
     //error handling for the new Gui
     static Boolean log_to_Konsol = false;
     static ArrayList<String> console_log = new ArrayList<>();
