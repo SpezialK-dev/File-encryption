@@ -306,12 +306,7 @@ public class GuiOld extends Main implements ActionListener {
                 decryptFile.setText("File Path: " + configL.getSelectedFile().getPath());
                 ConfigFilePath = configL.getSelectedFile().getPath();
                 decryptFileName.setText("File Name: " + configL.getSelectedFile().getName());
-                
-                try {
-                    outputFileRead = File_handling.readFile(configL.getSelectedFile().getPath());
-                } catch (IOException ex) {
-                    Logger.getLogger(GuiOld.class.getName()).log(Level.SEVERE, null, ex);
-                }
+                outputFileRead = File_handling.readFile(configL.getSelectedFile().getPath());
                 splitAndConvertandSetParameters(outputFileRead);
             }
 
@@ -368,11 +363,8 @@ public class GuiOld extends Main implements ActionListener {
         }//saves all of the info to a file
         if (e.getSource() == saveConfig) {
             String outSt = creatingOutputString();
-            try {
-                File_handling.StringWriter(outSt, outFilePath());
-            } catch (IOException ex) {
-                Logger.getLogger(GuiOld.class.getName()).log(Level.SEVERE, null, ex);
-            }
+            File_handling.StringWriter(outSt, outFilePath());
+
         }
         if(e.getSource() == changeColor) {
             String currentTheme = changeColor.getText();

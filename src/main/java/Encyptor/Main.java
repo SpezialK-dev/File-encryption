@@ -36,11 +36,9 @@ public class  Main {
             write_to_console("config file found");
             //reads the file
             String out_from_File_in;
-            try {
-                out_from_File_in = readFile(path_to_config_File.getAbsolutePath());
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
+
+            out_from_File_in = readFile(path_to_config_File.getAbsolutePath());
+
             write_to_console("text from config file: \n" + out_from_File_in);
             launch_option = Integer.parseInt(out_from_File_in.trim());
         }
@@ -64,11 +62,8 @@ public class  Main {
         launch_option = update;
         if(!path_to_config_File.isFile()){
             write_to_console("The current Value that is printed: " + launch_option);
-            try {
-                File_handling.StringWriter(String.valueOf(launch_option),path_to_config_File.getAbsolutePath());
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
+            File_handling.StringWriter(String.valueOf(launch_option),path_to_config_File.getAbsolutePath());
+
         }
     }
     //get the current OS info Variable

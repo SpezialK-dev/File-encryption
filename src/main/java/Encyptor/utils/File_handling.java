@@ -9,18 +9,33 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.Arrays;
+import java.util.regex.Pattern;
+
 public class File_handling{
     //todo add stuff for File handling
     //reads out a file and returns its content as a string
-    public static String readFile(String filePath) throws IOException {
+    public static String readFile(String filePath) {
         Path path = Path.of(filePath);
-        return Files.readString(path);
+        try {
+            return Files.readString(path);
+        } catch (IOException e) {
+            Main.write_to_console("Failed to write to : " + filePath);
+            throw new RuntimeException(e);
+        }
     }
     //writes a String into a file
-    public static void StringWriter(String input, String Filepath) throws IOException {
-        BufferedWriter outWriter = new BufferedWriter(new FileWriter(Filepath));
-        outWriter.write(input);
-        outWriter.close();
+    public static void StringWriter(String input, String filepath)  {
+        BufferedWriter outWriter = null;
+        try {
+            outWriter = new BufferedWriter(new FileWriter(filepath));
+            outWriter.write(input);
+            outWriter.close();
+        } catch (IOException e) {
+            Main.write_to_console("failed to write to:" + filepath);
+            throw new RuntimeException(e);
+        }
+
     }
     public static String get_Path_to_Config_dir(){
         String operating_system = System.getProperty("os.name").toLowerCase().trim();
@@ -41,6 +56,16 @@ public class File_handling{
             Main.write_to_console("we could not find your Operating System (can be ignored !! if it prints a path before)");
         }
         return endpath;
+    }
+    public static String  get_path_file(String inp){
+        String[] split = inp.split(Pattern.quote("/"));
+        split[split.length-1] = "";
+        String outString = "";
+        for(String s :split){
+            outString = outString + "/" + s;
+        }
+
+        return outString;
     }
 
 }

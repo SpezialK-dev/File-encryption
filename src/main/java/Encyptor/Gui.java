@@ -22,6 +22,7 @@ import java.security.SecureRandom;
 import java.security.spec.InvalidKeySpecException;
 import java.security.spec.InvalidParameterSpecException;
 import java.util.Arrays;
+import java.util.Random;
 import java.util.regex.Pattern;
 
 import static Encyptor.cipher.EncAndDec.DecriptionFiles;
@@ -36,7 +37,7 @@ public class Gui extends Application{
     boolean deleteFileAfterusage = false;
     boolean show_hidden_files_Files_Selector = false;
     boolean clear_values_after_usage = false;
-    boolean dev_mode_check = true; //default false
+    boolean dev_mode_check = false; //default false
     static boolean disable_logging_to_Consol = false;
 
     int[] test = new int[100];
@@ -130,16 +131,13 @@ public class Gui extends Application{
             if(pathToConfig != null && pathToConfig != string_for_file_manager){
                 Main.write_to_console("selected File test :" + pathToConfig);
                 Main.write_to_console("started reading File");
-                try{
-                    outfileRead = File_handling.readFile(pathToConfig);
-                    Main.write_to_console("read the file");
-                } catch (IOException e) {
-                    throw new RuntimeException(e);
-                }
+
+                outfileRead = File_handling.readFile(pathToConfig);
+                Main.write_to_console("read the file");
+
                 Main.write_to_console("finished reading from file");
                 //
                 if(outfileRead != ""){
-                    Main.write_to_console("the input of the file: " + outfileRead);
                     splitAndConvertandSetParameters(outfileRead);//should already set the variables at the right lication
 
                     //ends this
@@ -210,12 +208,14 @@ public class Gui extends Application{
                 if(out != null){//checks that there are things
                     //creates the output string
                     String export_settings_Str = encPswdWindow.get() + "|" + Arrays.toString(out.retSalt()) + "|" + Arrays.toString(out.retIv());
-
-
-                    //
+                    Random rand = new Random();
+                    int rand_numb_for_export = rand.nextInt(100000);
+                    String export_target = File_handling.get_path_file(currentFilepathENC) + "SavedEncryptionData" + Integer.toString(rand_numb_for_export) + ".txt";
+                    Main.write_to_console(export_target);
+                    File_handling.StringWriter(export_settings_Str,export_target );
+                    Main.write_to_console("exported the variables");
                 }
             }
-
         }
         ImGui.end();
     }
@@ -242,7 +242,6 @@ public class Gui extends Application{
             ImGui.text("Current Selected File: " + currentFilepathDEC);
 
             if(ImGui.button("decrypt")){
-                //todo write code for decryption
                 //to check that it is none null
                 //this might need to include to test if we have a file selector open at the moment
                 if(dec_Psw_Window.get().trim().length() != 0  && dec_Salt_Window.get().trim().length() != 0  && dec_IV_Window.get().trim().length() != 0 && currentFilepathDEC != null){
@@ -281,7 +280,6 @@ public class Gui extends Application{
                 }
             }
             if(ImGui.button("Open File selector")){
-                //todo maybe replace this with some different variables
                 currentFilepathDEC = string_for_file_manager;
             }
 
@@ -299,7 +297,7 @@ public class Gui extends Application{
             }
             if(ImGui.button("Import Settings")){
                 pathToConfig = string_for_file_manager;
-                Main.write_to_console("Imported Settings from"+ "Coming Soon!!");
+                Main.write_to_console("Imported Settings from"+ pathToConfig);
                 import_started = true;
             }
 
