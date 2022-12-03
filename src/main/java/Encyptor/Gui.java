@@ -384,11 +384,11 @@ public class Gui extends Application{
     }
     //todo add the putting the Strings into the right variables
     public void splitAndConvertandSetParameters(String inputString) {
-        String[] split1 = inputString.split(Pattern.quote("|"));//return the list with everything separated //have to do this because this uses regular expression so this means smt
+        String[] split1 = inputString.split(Pattern.quote("|"));//return the list with everything separated
         //the only thing left is to convert the byte
         //setting the password
 
-        //pswField.setText(split1[0]);
+        dec_Psw_Window =new ImString(split1[0]);
 
         //converting these things to arrays and setting them appropriately
         //so we remove all the brackets before we open this I can reuse the other part
@@ -396,18 +396,18 @@ public class Gui extends Application{
         String thissalt =  split1[1].replaceAll(Pattern.quote("]"),"");
         thissalt =  thissalt.replaceAll(Pattern.quote("["),"");
 
-        //saltField.setText(thissalt);//spits out errors evn thought it whould work
+        dec_Salt_Window = new ImString(thissalt);
+        thissalt =null;
 
         //the same thing as abouve but for the IV
         String thisiv =  split1[2].replaceAll(Pattern.quote("["),"");
         thisiv =  thisiv.replaceAll(Pattern.quote("]"),"");
 
+        dec_IV_Window = new ImString(thisiv);
+        thisiv = null;
+
         //ivField.setText(thisiv);
 
-        //ima just leave this here as a backup but this is not acutally need and could be removed
-
-        //curSalt = StringToByteArray(thissalt);
-        //curIV = StringToByteArray(thisiv);
     }
 
 }
