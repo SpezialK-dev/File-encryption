@@ -1,7 +1,12 @@
+
+plugins {
+    id 'com.github.johnrengelman.shadow' version '6.1.0'
+    id 'java'
+}
+
 apply plugin: 'java'
 apply plugin: 'jacoco'
 apply plugin: 'application'
-
 
 description = 'encypt your files and decypt them '
 

@@ -29,12 +29,12 @@ Currently, this program is only tested on linux and some code for windows is not
 - [ ] decrypt multiple files
 - [X] add native file chooser so that it looks better
   - upgrade the look of the file chooser
-- [ ] make memory footprint smaller
-- [ ] switch Gui frontend to https://github.com/SpaiR/imgui-java
-  - [ ] finish encryption window
-  - [ ] finish decryption window
-  - [ ] finish settings menu
+- [X] switch Gui frontend to https://github.com/SpaiR/imgui-java
+  - [X] finish encryption window
+  - [X] finish decryption window
+  - [X] finish settings menu
     - [ ] finish Plugin window
 ### dependencies
 
 - https://github.com/SpaiR/imgui-java
+- https://github.com/johnrengelman/shadow (for build process)
